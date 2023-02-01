@@ -1,0 +1,21 @@
+imports:
+  - { resource: "./Validators/Recaptcha.yaml" }
+
+  - { resource: "./FormElements/Form.yaml" }
+  - { resource: "./FormElements/Recaptcha.yaml" }
+
+  - { resource: "./Finishers/EmailToReceiver.yaml" }
+  - { resource: "./Finishers/EmailToSender.yaml" }
+
+TYPO3:
+  CMS:
+    Form:
+      prototypes:
+        standard:
+          formEditor:
+            dynamicRequireJsModules:
+              additionalViewModelModules:
+                1660555330: TYPO3/CMS/NsFriendlycaptcha/Backend/FormEditor/RecaptchaViewModel
+
+            formEditorPartials:
+              FormElement-Recaptcha: Stage/SimpleTemplate

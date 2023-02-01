@@ -1,0 +1,8 @@
+# cat=plugin.nsfriendlycaptcha; type=string; label=Friendly Captcha Site key
+public_key = 
+
+# cat=plugin.nsfriendlycaptcha; type=string; label=Friendly Captcha language
+lang = en
+
+# cat=plugin.nsfriendlycaptcha//08; type=options[LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/Backend.xlf:autocheck.auto=auto,LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/Backend.xlf:autocheck.focus=focus,LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/Backend.xlf:autocheck.none=none]; label=Automization Options
+autocheck = auto

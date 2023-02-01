@@ -1,0 +1,44 @@
+TYPO3:
+  CMS:
+    Form:
+      prototypes:
+        standard:
+          formElementsDefinition:
+            Recaptcha:
+              formEditor:
+                editors:
+                  100:
+                    identifier: header
+                    templateName: Inspector-FormElementHeaderEditor
+                  200:
+                    identifier: label
+                    templateName: Inspector-TextEditor
+                    label: formEditor.elements.FormElement.editor.label.label
+                    propertyPath: label
+                  900:
+                    identifier: validators
+                    templateName: Inspector-ValidatorsEditor
+                    label: formEditor.elements.FormElement.editor.recaptchaValidator.label
+                    selectOptions:
+                      180:
+                        value: Recaptcha
+                        label: formEditor.elements.RecaptchaMixin.validators.Recaptcha.editor.header.label'
+                  9999:
+                    identifier: removeButton
+                    templateName: Inspector-RemoveElementEditor
+
+                predefinedDefaults:
+                  validators:
+                    10:
+                      identifier: Recaptcha
+                  renderingOptions:
+                    submitButtonLabel: true
+                label: formEditor.elements.Recaptcha.label
+                group: custom
+                groupSorting: 700
+                iconIdentifier: t3-form-icon-recaptcha
+
+              implementationClassName: NITSAN\NsFriendlycaptcha\Domain\Model\FormElements\RecaptchaElement
+
+              properties:
+                containerClassAttribute: recaptcha

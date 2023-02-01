@@ -1,0 +1,18 @@
+# Configuration/Services.yaml
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  NITSAN\NsFriendlycaptcha\:
+    resource: '../Classes/*'
+
+  NITSAN\NsFriendlycaptcha\Services\CaptchaService:
+    arguments:
+      - '@TYPO3\CMS\Core\Configuration\ExtensionConfiguration'
+      - '@TYPO3\CMS\Extbase\Configuration\ConfigurationManager'
+      - '@TYPO3\CMS\Core\TypoScript\TypoScriptService'
+      - '@TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer'
+    public: true
+

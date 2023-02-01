@@ -1,0 +1,35 @@
+plugin.tx_friendlycaptcha {
+    public_key = {$plugin.tx_friendlycaptcha.public_key}
+    public_key.wrap.cObject = COA
+    public_key.wrap.cObject {
+        10 = TEXT
+        10.value = <div class="frc-captcha" data-sitekey="|" data-callback="myCallback"></div>
+    }
+    lang = {$plugin.tx_friendlycaptcha.lang}
+    autocheck = {$plugin.tx_friendlycaptcha.autocheck}
+
+    invisibleCallback = onRecaptchaSubmit
+
+    captchaCssClass = frc-captcha
+}
+
+
+# add settings for EXT:formhandler
+plugin.Tx_Formhandler.settings {
+    markers {
+        recaptcha_invisible = FLUIDTEMPLATE
+        recaptcha_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/Invisible.html
+
+        recaptcha_button_invisible = FLUIDTEMPLATE
+        recaptcha_button_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/ButtonInvisible.html
+    }
+}
+
+# add settings for EXT:form
+plugin.tx_form.settings.yamlConfigurations.1974 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
+plugin.tx_form.view.partialRootPaths.1974 = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
+
+page.includeJSFooterlibs.recaptcha.external = 1
+page.includeJSFooterlibs.10 = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
+page.includeJSFooterlibs.20 = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.min.js
+page.includeJSFooterlibs.30 = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/Custom.js

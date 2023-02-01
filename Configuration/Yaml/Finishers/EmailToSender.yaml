@@ -1,0 +1,10 @@
+TYPO3:
+  CMS:
+    Form:
+      prototypes:
+        standard:
+          finishersDefinition:
+            EmailToSender:
+              options:
+                templateRootPaths:
+                  1974: EXT:ns_friendlycaptcha/Resources/Private/Frontend/Templates/Finishers/Email/

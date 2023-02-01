@@ -1,0 +1,10 @@
+plugin.tx_friendlycaptcha {
+    # cat=plugin.nsfriendlycaptcha//03; type=string; label= Site key: Friendly Captcha Site key
+    public_key = 
+
+    # cat=plugin.nsfriendlycaptcha//06; type=string; label= Language: en, fr, de, it, nl, pt, es, ca, da, ja, ru, sv, el, uk, bg, cs, sk, no, fi, lt, lt, pl, et, hr, sr, sl, hu, ro, zh, zh_TW, and vi
+    lang = en
+
+    # cat=plugin.nsfriendlycaptcha//08; type=options[LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/Backend.xlf:autocheck.auto=auto,LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/Backend.xlf:autocheck.focus=focus,LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/Backend.xlf:autocheck.none=none]; label=Automization Options
+    autocheck = auto
+}

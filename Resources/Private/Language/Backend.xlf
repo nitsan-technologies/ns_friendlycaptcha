@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="messages" date="2017-06-07T12:22:32Z" product-name="recaptcha">
+		<header/>
+		<body>
+			<trans-unit id="formEditor.elements.Recaptcha.label" xml:space="preserve">
+				<source>Friendly Captcha</source>
+			</trans-unit>
+			<trans-unit id="formEditor.elements.FormElement.editor.recaptchaValidator.label" xml:space="preserve">
+				<source>Friendly Captcha validation is active</source>
+			</trans-unit>
+			<trans-unit id="formEditor.elements.RecaptchaMixin.validators.Recaptcha.editor.header.label" xml:space="preserve">
+				<source>Friendly Captcha validation</source>
+			</trans-unit>
+			<trans-unit id="formEditor.elements.RecaptchaMixin.editor.validators.Recaptcha.label" xml:space="preserve">
+				<source>Friendly Captcha validation</source>
+			</trans-unit>
+			<trans-unit id="formEditor.elements.Recaptcha.editor.showLabel.label" xml:space="preserve">
+				<source>Show label in frontend</source>
+			</trans-unit>
+			<trans-unit id="formEditor.elements.Form.editor.useInvisibleRecaptcha.label" xml:space="preserve">
+				<source>Use invisible recaptcha</source>
+			</trans-unit>
+			<trans-unit id="autocheck.auto" xml:space="preserve">
+				<source>Auto check</source>
+			</trans-unit>
+			<trans-unit id="autocheck.focus" xml:space="preserve">
+				<source>Check on Focus</source>
+			</trans-unit>
+			<trans-unit id="autocheck.none" xml:space="preserve">
+				<source>Manual</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

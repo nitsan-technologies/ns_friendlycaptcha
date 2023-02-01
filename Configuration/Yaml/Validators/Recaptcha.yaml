@@ -1,0 +1,11 @@
+TYPO3:
+  CMS:
+    Form:
+      prototypes:
+        standard:
+          validatorsDefinition:
+            Recaptcha:
+              implementationClassName: NITSAN\NsFriendlycaptcha\Validation\RecaptchaValidator
+              formEditor:
+                iconIdentifier: form-validator
+                label: formEditor.elements.RecaptchaMixin.editor.validators.Recaptcha.label

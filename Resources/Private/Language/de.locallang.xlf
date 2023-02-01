@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2017-07-12T08:43:45" product-name="recaptcha">
+		<header/>
+		<body>
+			<trans-unit id="error_recaptcha_missing-input-secret" xml:space="preserve">
+				<source>The captcha secret parameter is missing.</source>
+				<target>Der Captcha geheime Parameter fehlt.</target>
+			</trans-unit>
+			<trans-unit id="error_recaptcha_invalid-input-secret" xml:space="preserve">
+				<source>The captcha secret parameter is invalid or malformed.</source>
+				<target>Der Captcha geheime Parameter ist unültig oder fehlerhaft.</target>
+			</trans-unit>
+			<trans-unit id="error_recaptcha_missing-input-response" xml:space="preserve">
+				<source>missing-input-response</source>
+				<target>fehlende Eingabeantwort</target>
+			</trans-unit>
+			<trans-unit id="error_recaptcha_invalid-input-response" xml:space="preserve">
+				<source>The captcha response parameter is invalid or malformed.</source>
+				<target>Der Captcha Antwort Parameter ist ungültig oder fehlerhaft.</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
