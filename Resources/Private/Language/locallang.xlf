@@ -10,7 +10,7 @@
 				<source>The captcha secret parameter is invalid or malformed.</source>
 			</trans-unit>
 			<trans-unit id="error_recaptcha_missing-input-response" xml:space="preserve">
-				<source>missing-input-response</source>
+				<source>Please perform the anti-robot verification</source>
 			</trans-unit>
 			<trans-unit id="error_recaptcha_invalid-input-response" xml:space="preserve">
 				<source>missing-input-response</source>

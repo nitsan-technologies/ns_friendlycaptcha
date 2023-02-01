@@ -13,7 +13,7 @@
 			</trans-unit>
 			<trans-unit id="error_recaptcha_missing-input-response" xml:space="preserve">
 				<source>missing-input-response</source>
-				<target>fehlende Eingabeantwort</target>
+				<target>Bitte führen Sie die Anti-Roboter-Verifizierung durch</target>
 			</trans-unit>
 			<trans-unit id="error_recaptcha_invalid-input-response" xml:space="preserve">
 				<source>The captcha response parameter is invalid or malformed.</source>
