@@ -168,8 +168,8 @@ class CaptchaService
         $result = ['verified' => false, 'error' => ''];
         if (empty($request['response'])) {
             $result['error'] = LocalizationUtility::translate(
-                key: 'error_recaptcha_missing-input-response',
-                extensionName: 'ns_friendlycaptcha'
+                'error_recaptcha_missing-input-response',
+                'ns_friendlycaptcha'
             );
         } else {
             $result['verified'] = true;
