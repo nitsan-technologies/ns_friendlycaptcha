@@ -37,8 +37,12 @@ class RecaptchaValidator extends AbstractValidator
     public function isValid($value)
     {
         /** @var CaptchaService $captcha */
-        $captcha = GeneralUtility::getContainer()->get(CaptchaService::class);
-
+        if(version_compare(TYPO3_version, '10.0.0', '<=')){
+            $captcha = \NITSAN\NsFriendlycaptcha\Services\CaptchaService::getInstance();
+        } else {
+            $captcha = GeneralUtility::getContainer()->get(CaptchaService::class);
+        }
+        
         if ($captcha !== null) {
             $status = $captcha->validateReCaptcha();
 

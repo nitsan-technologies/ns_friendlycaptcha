@@ -1,0 +1,25 @@
+
+TYPO3:
+  CMS:
+    Form:
+      prototypes:
+        standard:
+          formElementsDefinition:
+            Form:
+              renderingOptions:
+                partialRootPaths:
+                  1974: 'EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/'
+
+            Recaptcha:
+              implementationClassName: NITSAN\NsFriendlycaptcha\Domain\Model\FormElements\RecaptchaElement
+              properties:
+                containerClassAttribute: 'recaptcha'
+
+          validatorsDefinition:
+            Recaptcha:
+              implementationClassName: NITSAN\NsFriendlycaptcha\Validation\RecaptchaValidator
+      mixins:
+        finishersEmailMixin:
+          options:
+            templateRootPaths:
+              1974: 'EXT:ns_friendlycaptcha/Resources/Private/Frontend/Templates/Finishers/Email/'
