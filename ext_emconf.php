@@ -11,7 +11,7 @@ $EM_CONF['ns_friendlycaptcha'] = [
     'version' => '1.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '8.0.0-11.5.99',
+            'typo3' => '9.0.0-11.5.99',
         ],
         'conflicts' => [],
         'suggests' => [],
