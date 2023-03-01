@@ -15,7 +15,7 @@
     "issues": "https://github.com/nitsan-technologies/ns_friendlycaptcha/issues"
   },
   "require": {
-    "typo3/cms-core": "^8.0  || ^9.0 || ^10.0  || ^11.0 || ^12.0"
+    "typo3/cms-core": "^9.0 || ^10.0  || ^11.0 || ^12.0"
   },
   "suggest": {
 		"typo3/cms-form": "*"
