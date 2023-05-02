@@ -5,6 +5,7 @@ use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use GuzzleHttp;
 
 class CaptchaService
 {
@@ -17,6 +18,12 @@ class CaptchaService
      * @var array
      */
     protected $configuration = [];
+
+    /**
+     * Guzzle Http Client
+     * @var GuzzleHttp\Client
+     */
+    protected $client = null;
 
     public function injectObjectManager(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager)
     {
@@ -166,7 +173,8 @@ class CaptchaService
         }
 
         $request = [
-            'secret' => $this->configuration['private_key'] ?? '',
+            'site_key' => $this->configuration['public_key'] ?? '',
+            'secreat_key'=>  $this->configuration['secret_key'] ?? '',
             'response' => trim(GeneralUtility::_GP('frc-captcha-solution')),
             'remoteip' => GeneralUtility::getIndpEnv('REMOTE_ADDR'),
         ];
@@ -176,19 +184,22 @@ class CaptchaService
         $result = ['verified' => false, 'error' => ''];
         if (empty($request['response'])) {
             $result['error'] = 'missing-input-response';
-        } else {
-            $response = $this->queryVerificationServer($request);
-            if (!$response) {
-                $result['error'] = 'validation-server-not-responding';
+        }
+
+        // Server Side Velidation
+        $response = $this->queryVerificationServer($request);
+        if($response['success']){
+            $result['verified'] = true;
+        }else {
+            if(isset($response['error-codes'])){
+                $result['error'] = $response['error-codes'];
             }
-            $result = ['verified' => false, 'error' => ''];
-            if (empty($request['response'])) {
-                $result['error'] = LocalizationUtility::translate(
-                    'error_recaptcha_missing-input-response',
-                    'ns_friendlycaptcha'
-                );
-            } else {
-                $result['verified'] = true;
+            if(isset($response['errors'])){
+                $result['error'] = 'missing-input-response';
+                // $result['error'] = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
+                //     'error_recaptcha_missing-input-response',
+                //     'ns_friendlycaptcha'
+                // );
             }
         }
         return $result;
@@ -203,7 +214,7 @@ class CaptchaService
      */
     protected function queryVerificationServer(array $data): array
     {
-        $verifyServerInfo = @parse_url($this->configuration['verify_server']);
+        $verifyServerInfo = 'https://api.friendlycaptcha.com/api/v1/siteverify';
 
         if (empty($verifyServerInfo)) {
             return [
@@ -212,9 +223,55 @@ class CaptchaService
             ];
         }
 
-        $request = GeneralUtility::implodeArrayForUrl('', $data);
-        $response = GeneralUtility::getUrl($this->configuration['verify_server'] . '?' . $request);
+        if(empty($data['secreat_key'])){
+            return [
+                'success' => false,
+                'error-codes' => 'Invalid Secreat Key'
+            ];
+        }
 
-        return $response ? json_decode($response, true) : [];
+        $params = [
+            'solution' => $data['response'],
+            'secret' => $data['secreat_key'],
+            'sitekey' => $data['site_key'],
+        ];
+
+        $body =json_encode($params);
+        $options = [
+            'http_errors' => true,
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+            'body' => $body,
+        ];
+        try{
+            $response = $this->getClient()->post($verifyServerInfo, $options)->getBody()->getContents();
+            return json_decode($response, true);
+        } catch (Exception $e) {
+            if(strpos($e->getMessage(), "secret_invalid")){
+                return [
+                    'success' => false,
+                    'error-codes' => 'Invalid Secreat Key',
+                    'message' => $e
+                ];
+            }else {
+                return [
+                    'success' => false,
+                    'error-codes' => 'validation-server-not-responding',
+                    'message' => $e
+                ];
+            }
+        }
+    }
+
+    /**
+     * Gets to guzzle client model
+     * @return GuzzleHttp\Client
+     */
+    public function getClient(): GuzzleHttp\Client
+    {
+        $this->client = new \GuzzleHttp\Client([]);
+        return $this->client;
     }
 }
