@@ -19,9 +19,11 @@ class RecaptchaValidator extends AbstractValidator
      *
      * @return \TYPO3\CMS\Extbase\Error\Result
      */
-    public function validate($value)
+    public function validate($value = null)
     {
-        $value = trim(GeneralUtility::_GP('g-recaptcha-response'));
+        if(GeneralUtility::_GP('g-recaptcha-response')){
+            $value = trim(GeneralUtility::_GP('g-recaptcha-response'));
+        }
         $this->result = new Result();
         if ($this->acceptsEmptyValues === false || $this->isEmpty($value) === false) {
             $this->isValid($value);

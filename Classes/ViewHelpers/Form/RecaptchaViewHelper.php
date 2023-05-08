@@ -7,7 +7,7 @@ use TYPO3\CMS\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper;
 
 class RecaptchaViewHelper extends AbstractFormFieldViewHelper
 {
-    protected CaptchaService $captchaService;
+    protected $captchaService;
 
     public function __construct(CaptchaService $captchaService)
     {
