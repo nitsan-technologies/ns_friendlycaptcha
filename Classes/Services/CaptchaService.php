@@ -101,6 +101,7 @@ class CaptchaService
      */
     protected function isInRobotMode(): bool
     {
+        $this->configuration['robotMode'] = isset($this->configuration['robotMode']) ? $this->configuration['robotMode'] : FALSE;
         return (bool) $this->configuration['robotMode'];
     }
 
