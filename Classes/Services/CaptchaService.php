@@ -178,6 +178,7 @@ class CaptchaService
             'secreat_key'=>  $this->configuration['secret_key'] ?? '',
             'response' => trim(GeneralUtility::_GP('frc-captcha-solution')),
             'remoteip' => GeneralUtility::getIndpEnv('REMOTE_ADDR'),
+            'eu' => $this->configuration['eu'] ?? ''
         ];
         if(trim(GeneralUtility::_GP('frc-captcha-solution')) == '.UNSTARTED' || trim(GeneralUtility::_GP('frc-captcha-solution')) == '.UNFINISHED' || trim(GeneralUtility::_GP('frc-captcha-solution')) == '.FETCHING'){
             $request['response'] = '';    
@@ -216,7 +217,9 @@ class CaptchaService
     protected function queryVerificationServer(array $data): array
     {
         $verifyServerInfo = 'https://api.friendlycaptcha.com/api/v1/siteverify';
-
+        if($data['eu']){
+            $verifyServerInfo = 'https://eu-api.friendlycaptcha.eu/api/v1/puzzle';
+        }
         if (empty($verifyServerInfo)) {
             return [
                 'success' => false,
@@ -227,7 +230,7 @@ class CaptchaService
         if(empty($data['secreat_key'])){
             return [
                 'success' => false,
-                'error-codes' => 'Invalid Secreat Key'
+                'error-codes' => 'Invalid Secret Key'
             ];
         }
 
@@ -253,7 +256,7 @@ class CaptchaService
             if(strpos($e->getMessage(), "secret_invalid")){
                 return [
                     'success' => false,
-                    'error-codes' => 'Invalid Secreat Key',
+                    'error-codes' => 'Invalid Secret Key',
                     'message' => $e
                 ];
             }else {

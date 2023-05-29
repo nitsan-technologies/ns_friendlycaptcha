@@ -29,7 +29,8 @@
 						value="1"
 						additionalAttributes="{formvh:translateElementProperty(element: element, property: 'fluidAdditionalAttributes')}"
 					/>
-					<div class="frc-captcha" data-sitekey="{configuration.public_key}" data-callback="myCallback" data-start="{configuration.autocheck}" data-lang="{lang}"></div>					
+					<f:variable name="url">{f:if(condition: '{configuration.eu} == 1', then: 'https://eu-api.friendlycaptcha.eu/api/v1/puzzle', else: 'https://api.friendlycaptcha.com/api/v1/puzzle')}</f:variable>
+					<div class="frc-captcha" data-sitekey="{configuration.public_key}" data-callback="myCallback" data-puzzle-endpoint="{url}" data-start="{configuration.autocheck}" data-lang="{lang}"></div>					
 				</f:then>
 				<f:else>
 					<div class="recaptcha-development-mode">
