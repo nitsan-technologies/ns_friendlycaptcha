@@ -10,6 +10,8 @@ plugin.tx_friendlycaptcha {
 
     autocheck = {$plugin.tx_friendlycaptcha.autocheck}
 
+    eu = {$plugin.tx_friendlycaptcha.eu}
+
     invisibleCallback = onRecaptchaSubmit
 
     captchaCssClass = frc-captcha
