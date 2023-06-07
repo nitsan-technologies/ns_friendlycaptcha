@@ -178,7 +178,8 @@ class CaptchaService
             'secreat_key'=>  $this->configuration['secret_key'] ?? '',
             'response' => trim(GeneralUtility::_GP('frc-captcha-solution')),
             'remoteip' => GeneralUtility::getIndpEnv('REMOTE_ADDR'),
-            'eu' => $this->configuration['eu'] ?? ''
+            'eu' => $this->configuration['eu'] ?? '',
+            'enablepuzzle' => $this->configuration['enablepuzzle'] ?? ''
         ];
         if(trim(GeneralUtility::_GP('frc-captcha-solution')) == '.UNSTARTED' || trim(GeneralUtility::_GP('frc-captcha-solution')) == '.UNFINISHED' || trim(GeneralUtility::_GP('frc-captcha-solution')) == '.FETCHING'){
             $request['response'] = '';    
@@ -218,7 +219,10 @@ class CaptchaService
     {
         $verifyServerInfo = 'https://api.friendlycaptcha.com/api/v1/siteverify';
         if($data['eu']){
-            $verifyServerInfo = 'https://eu-api.friendlycaptcha.eu/api/v1/puzzle';
+            $verifyServerInfo = 'https://eu-api.friendlycaptcha.eu/api/v1/siteverify';
+            if($data['enablepuzzle']){
+                $verifyServerInfo = 'https://eu-api.friendlycaptcha.eu/api/v1/puzzle';
+            }
         }
         if (empty($verifyServerInfo)) {
             return [
