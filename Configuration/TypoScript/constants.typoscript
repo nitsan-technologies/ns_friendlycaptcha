@@ -10,4 +10,8 @@ plugin.tx_friendlycaptcha {
 
     # cat=plugin.nsfriendlycaptcha//09; type=boolean; label= Enable EU endpoint
 	eu = 1
+
+    # cat=plugin.nsfriendlycaptcha//09; type=boolean; label= Enable PUZZLE
+	enablepuzzle = 0
+    
 }

@@ -12,6 +12,8 @@ plugin.tx_friendlycaptcha {
 
     eu = {$plugin.tx_friendlycaptcha.eu}
 
+    enablepuzzle = {$plugin.tx_friendlycaptcha.enablepuzzle}
+
     invisibleCallback = onRecaptchaSubmit
 
     captchaCssClass = frc-captcha
