@@ -220,9 +220,6 @@ class CaptchaService
         $verifyServerInfo = 'https://api.friendlycaptcha.com/api/v1/siteverify';
         if($data['eu']){
             $verifyServerInfo = 'https://eu-api.friendlycaptcha.eu/api/v1/siteverify';
-            if($data['enablepuzzle']){
-                $verifyServerInfo = 'https://eu-api.friendlycaptcha.eu/api/v1/puzzle';
-            }
         }
         if (empty($verifyServerInfo)) {
             return [
