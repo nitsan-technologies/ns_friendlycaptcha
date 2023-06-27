@@ -19,7 +19,7 @@ class RecaptchaValidator extends AbstractValidator
      *
      * @return \TYPO3\CMS\Extbase\Error\Result
      */
-    public function validate($value = null)
+    public function validate(mixed $value = null): \TYPO3\CMS\Extbase\Error\Result
     {
         if(GeneralUtility::_GP('g-recaptcha-response')){
             $value = trim(GeneralUtility::_GP('g-recaptcha-response'));
@@ -36,14 +36,10 @@ class RecaptchaValidator extends AbstractValidator
      *
      * @param mixed $value The value
      */
-    public function isValid($value)
+    public function isValid(mixed $value): void
     {
         /** @var CaptchaService $captcha */
-        if(version_compare(TYPO3_version, '10.0.0', '<=')){
-            $captcha = \NITSAN\NsFriendlycaptcha\Services\CaptchaService::getInstance();
-        } else {
-            $captcha = GeneralUtility::getContainer()->get(CaptchaService::class);
-        }
+        $captcha = GeneralUtility::getContainer()->get(CaptchaService::class);
         
         if ($captcha !== null) {
             $status = $captcha->validateReCaptcha();

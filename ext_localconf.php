@@ -1,5 +1,4 @@
 <?php
-call_user_func(function () {
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['locallangXMLOverride']['EXT:form/Resources/Private/Language/Database.xlf'][] =
         'EXT:ns_friendlycaptcha/Resources/Private/Language/Backend.xlf';
 
@@ -12,14 +11,9 @@ call_user_func(function () {
     );
 
 
-if(version_compare(TYPO3_version, '10.0.0', '<=')){
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('
-module.tx_form.settings.yamlConfigurations {
-    1974 = EXT:ns_friendlycaptcha/Configuration/Yamlv9/BaseSetup.yaml
-    1975 = EXT:ns_friendlycaptcha/Configuration/Yamlv9/FormEditorSetup.yaml
-}
-    ');
-} else {
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['security.backend.enforceContentSecurityPolicy'] = false;
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['features']['security.frontend.enforceContentSecurityPolicy'] = false;
+
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('
 module.tx_form {
     settings {
@@ -29,6 +23,4 @@ module.tx_form {
     }
 }
     ');
-}
     
-});
