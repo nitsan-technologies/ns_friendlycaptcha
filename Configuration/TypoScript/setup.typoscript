@@ -37,6 +37,6 @@ plugin.tx_form.settings.yamlConfigurations.1975 = EXT:ns_friendlycaptcha/Configu
 plugin.tx_form.view.partialRootPaths.1974 = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
 
 page.includeJSFooterlibs.recaptcha.external = 1
-page.includeJSFooterlibs.10 = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
-page.includeJSFooterlibs.20 = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.min.js
-page.includeJSFooterlibs.30 = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/Custom.js
+page.includeJSFooterlibs.widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
+page.includeJSFooterlibs.widgetmin = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.min.js
+page.includeJSFooterlibs.custom = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/Custom.js
