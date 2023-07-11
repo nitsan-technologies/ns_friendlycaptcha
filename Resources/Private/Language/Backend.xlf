@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-	<file source-language="en" datatype="plaintext" original="messages" date="2017-06-07T12:22:32Z" product-name="recaptcha">
+	<file source-language="en" datatype="plaintext" original="messages" date="2017-06-07T12:22:32Z" product-name="ns_friendlycaptcha">
 		<header/>
 		<body>
 			<trans-unit id="formEditor.elements.Recaptcha.label" xml:space="preserve">
@@ -20,15 +20,6 @@
 			</trans-unit>
 			<trans-unit id="formEditor.elements.Form.editor.useInvisibleRecaptcha.label" xml:space="preserve">
 				<source>Use invisible recaptcha</source>
-			</trans-unit>
-			<trans-unit id="autocheck.auto" xml:space="preserve">
-				<source>Auto check</source>
-			</trans-unit>
-			<trans-unit id="autocheck.focus" xml:space="preserve">
-				<source>Check on Focus</source>
-			</trans-unit>
-			<trans-unit id="autocheck.none" xml:space="preserve">
-				<source>Manual</source>
 			</trans-unit>
 		</body>
 	</file>

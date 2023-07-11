@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace NITSAN\NsFriendlycaptcha\Services;
 
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
@@ -6,15 +8,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use Psr\Container\ContainerInterface;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+
 use GuzzleHttp;
 
 class CaptchaService
 {
-    // /**
-    //  * @var \TYPO3\CMS\Extbase\Object\ObjectManager
-    //  */
-    // protected $objectManager;
-
     /**
      * @var array
      */
@@ -26,7 +26,12 @@ class CaptchaService
      */
     protected $client = null;
 
-    public function injectObjectManager(ContainerInterface $objectManager)
+    public function __construct(
+        ConfigurationManager $configurationManager,
+        ExtensionConfiguration $extensionConfiguration,
+        TypoScriptService $typoScriptService,
+        ContentObjectRenderer $contentObjectRenderer
+    )
     {
         $this->initialize();
     }

@@ -11,9 +11,9 @@ services:
 
   NITSAN\NsFriendlycaptcha\Services\CaptchaService:
     arguments:
-      - '@TYPO3\CMS\Core\Configuration\ExtensionConfiguration'
-      - '@TYPO3\CMS\Extbase\Configuration\ConfigurationManager'
-      - '@TYPO3\CMS\Core\TypoScript\TypoScriptService'
-      - '@TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer'
+      $extensionConfiguration: '@TYPO3\CMS\Core\Configuration\ExtensionConfiguration'
+      $configurationManager: '@TYPO3\CMS\Extbase\Configuration\ConfigurationManager'
+      $typoScriptService: '@TYPO3\CMS\Core\TypoScript\TypoScriptService'
+      $contentObjectRenderer: '@TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer'
     public: true
 

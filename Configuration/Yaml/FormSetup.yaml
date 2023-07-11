@@ -15,7 +15,7 @@ TYPO3:
           formEditor:
             dynamicRequireJsModules:
               additionalViewModelModules:
-                1660555330: TYPO3/CMS/NsFriendlycaptcha/Backend/FormEditor/RecaptchaViewModel
+                1689074511: TYPO3/CMS/NsFriendlycaptcha/Backend/FormEditor/RecaptchaViewModel
 
             formEditorPartials:
               FormElement-Recaptcha: Stage/SimpleTemplate

@@ -1,8 +1,14 @@
-# cat=plugin.nsfriendlycaptcha; type=string; label=Friendly Captcha Site key
+# cat=plugin.nsfriendlycaptcha//03; type=string; label= Site key: Friendly Captcha Site key
 public_key = 
 
-# cat=plugin.nsfriendlycaptcha; type=string; label=Friendly Captcha language
-lang = en
+# cat=plugin.nsfriendlycaptcha//04; type=string; label= Secret Key: Friendly Captcha Secret Key
+secret_key = 
 
 # cat=plugin.nsfriendlycaptcha//08; type=options[Auto check,Check on Focus,Manual]; label=Automization Options
-autocheck = auto
+autocheck = Auto check
+
+# cat=plugin.nsfriendlycaptcha//09; type=boolean; label= Enable EU endpoint
+eu = 1
+
+# cat=plugin.nsfriendlycaptcha//10; type=boolean; label= Enable PUZZLE
+enablepuzzle = 0
