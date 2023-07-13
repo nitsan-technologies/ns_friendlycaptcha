@@ -12,7 +12,7 @@ plugin.Tx_Formhandler.settings {
 module.tx_form {
     settings {
         yamlConfigurations {
-            1974 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
+            1975 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
         }
     }
 }
@@ -20,7 +20,7 @@ module.tx_form {
 # add settings for EXT:form
 
 plugin.tx_form.settings.yamlConfigurations.1975 = EXT:ns_friendlycaptcha/Configuration/Yaml/BaseSetup.yaml
-plugin.tx_form.view.partialRootPaths.1974 = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
+plugin.tx_form.view.partialRootPaths.1975 = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
 
 page.includeJSFooterlibs.recaptcha.external = 1
 page.includeJSFooterlibs.widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js

@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace NITSAN\NsFriendlycaptcha\Adapter;
 
@@ -8,7 +7,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 class TypoScriptAdapter
 {
-    protected CaptchaService $captchaService;
+    protected $captchaService;
 
     public function __construct(CaptchaService $captchaService)
     {
