@@ -8,10 +8,10 @@ $EM_CONF['ns_friendlycaptcha'] = [
     'author_email' => 'sanjay@nitsan.in',
     'author_company' => 'NITSAN Technologies Pvt Ltd',
     'state' => 'stable',
-    'version' => '1.3.3',
+    'version' => '12.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '9.0.0-11.5.99',
+            'typo3' => '12.0.0-12.5.99',
         ],
         'conflicts' => [],
         'suggests' => [],

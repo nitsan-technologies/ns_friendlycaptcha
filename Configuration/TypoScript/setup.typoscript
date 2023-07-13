@@ -1,25 +1,3 @@
-plugin.tx_friendlycaptcha {
-    public_key = {$plugin.tx_friendlycaptcha.public_key}
-    public_key.wrap.cObject = COA
-    public_key.wrap.cObject {
-        10 = TEXT
-        10.value = <div class="frc-captcha" data-sitekey="|" data-callback="myCallback"></div>
-    }
-
-    secret_key = {$plugin.tx_friendlycaptcha.secret_key}
-
-    autocheck = {$plugin.tx_friendlycaptcha.autocheck}
-
-    eu = {$plugin.tx_friendlycaptcha.eu}
-
-    enablepuzzle = {$plugin.tx_friendlycaptcha.enablepuzzle}
-
-    invisibleCallback = onRecaptchaSubmit
-
-    captchaCssClass = frc-captcha
-}
-
-
 # add settings for EXT:formhandler
 plugin.Tx_Formhandler.settings {
     markers {
@@ -31,12 +9,19 @@ plugin.Tx_Formhandler.settings {
     }
 }
 
+module.tx_form {
+    settings {
+        yamlConfigurations {
+            1975 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
+        }
+    }
+}
+
 # add settings for EXT:form
 
-plugin.tx_form.settings.yamlConfigurations.1975 = EXT:ns_friendlycaptcha/Configuration/Yamlv9/BaseSetup.yaml
-plugin.tx_form.view.partialRootPaths.1974 = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
+plugin.tx_form.settings.yamlConfigurations.1975 = EXT:ns_friendlycaptcha/Configuration/Yaml/BaseSetup.yaml
+plugin.tx_form.view.partialRootPaths.1975 = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
 
 page.includeJSFooterlibs.recaptcha.external = 1
 page.includeJSFooterlibs.widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
 page.includeJSFooterlibs.widgetmin = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.min.js
-page.includeJSFooterlibs.custom = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/Custom.js

@@ -1,19 +1,20 @@
 <?php
+declare(strict_types=1);
+
 namespace NITSAN\NsFriendlycaptcha\Services;
 
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use Psr\Container\ContainerInterface;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+
 use GuzzleHttp;
 
 class CaptchaService
 {
-    /**
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManager
-     */
-    protected $objectManager;
-
     /**
      * @var array
      */
@@ -25,20 +26,19 @@ class CaptchaService
      */
     protected $client = null;
 
-    public function injectObjectManager(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager)
+    public function __construct(
+        ConfigurationManager $configurationManager,
+        ExtensionConfiguration $extensionConfiguration,
+        TypoScriptService $typoScriptService,
+        ContentObjectRenderer $contentObjectRenderer
+    )
     {
-        $this->objectManager = $objectManager;
         $this->initialize();
     }
 
     public static function getInstance(): CaptchaService
     {
-        /** @var \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
-        $objectManager = GeneralUtility::makeInstance(
-            \TYPO3\CMS\Extbase\Object\ObjectManager::class
-        );
-        /** @var self $instance */
-        $instance = $objectManager->get(self::class);
+        $instance = GeneralUtility::makeInstance(self::class);
         return $instance;
     }
 
@@ -56,7 +56,7 @@ class CaptchaService
         }
 
         /** @var ConfigurationManagerInterface $configurationManager */
-        $configurationManager = $this->objectManager->get(ConfigurationManagerInterface::class);
+        $configurationManager = GeneralUtility::makeInstance(ConfigurationManagerInterface::class);
         $typoScriptConfiguration = $configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK,
             'friendlycaptcha'
@@ -64,7 +64,7 @@ class CaptchaService
 
         if (!empty($typoScriptConfiguration) && is_array($typoScriptConfiguration)) {
             /** @var TypoScriptService $typoScriptService */
-            $typoScriptService = $this->objectManager->get(TypoScriptService::class);
+            $typoScriptService = GeneralUtility::makeInstance(TypoScriptService::class);
             \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
                 $configuration,
                 $typoScriptService->convertPlainArrayToTypoScriptArray($typoScriptConfiguration),
@@ -91,7 +91,7 @@ class CaptchaService
     protected function getContentObjectRenderer(): ContentObjectRenderer
     {
         /** @var ContentObjectRenderer $contentRenderer */
-        $contentRenderer = $this->objectManager->get(ContentObjectRenderer::class);
+        $contentRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
         return $contentRenderer;
     }
 
@@ -125,7 +125,7 @@ class CaptchaService
     public function getShowCaptcha(): bool
     {
         return !$this->isInRobotMode()
-            && (TYPO3_MODE == 'BE' || !$this->isDevelopmentMode() || $this->isEnforceCaptcha());
+            && (\TYPO3\CMS\Core\Http\ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend() || !$this->isDevelopmentMode() || $this->isEnforceCaptcha());
     }
 
     /**
@@ -161,18 +161,7 @@ class CaptchaService
                 'verified' => true,
                 'error' => ''
             ];
-        }
-
-        if (!isset($this->configuration) || empty($this->configuration)) {
-            if (! $this->objectManager instanceof \TYPO3\CMS\Extbase\Object\ObjectManager) {
-                /** @var \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
-                $objectManager = GeneralUtility::makeInstance(
-                    \TYPO3\CMS\Extbase\Object\ObjectManager::class
-                );
-                $this->injectObjectManager($objectManager);
-            }
-        }
-
+        }     
         $request = [
             'site_key' => $this->configuration['public_key'] ?? '',
             'secreat_key'=>  $this->configuration['secret_key'] ?? '',
@@ -199,10 +188,6 @@ class CaptchaService
             }
             if(isset($response['errors'])){
                 $result['error'] = 'missing-input-response';
-                // $result['error'] = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                //     'error_recaptcha_missing-input-response',
-                //     'ns_friendlycaptcha'
-                // );
             }
         }
         return $result;
@@ -220,12 +205,6 @@ class CaptchaService
         $verifyServerInfo = 'https://api.friendlycaptcha.com/api/v1/siteverify';
         if($data['eu']){
             $verifyServerInfo = 'https://eu-api.friendlycaptcha.eu/api/v1/siteverify';
-        }
-        if (empty($verifyServerInfo)) {
-            return [
-                'success' => false,
-                'error-codes' => 'recaptcha-not-reachable'
-            ];
         }
 
         if(empty($data['secreat_key'])){
@@ -253,7 +232,7 @@ class CaptchaService
         try{
             $response = $this->getClient()->post($verifyServerInfo, $options)->getBody()->getContents();
             return json_decode($response, true);
-        } catch (Exception $e) {
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
             if(strpos($e->getMessage(), "secret_invalid")){
                 return [
                     'success' => false,
