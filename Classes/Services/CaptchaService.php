@@ -161,16 +161,19 @@ class CaptchaService
                 'verified' => true,
                 'error' => ''
             ];
-        }     
+        }
+
+        $captchaSolution = trim(GeneralUtility::_GP('frc-captcha-solution') ?? '');
+
         $request = [
             'site_key' => $this->configuration['public_key'] ?? '',
             'secreat_key'=>  $this->configuration['secret_key'] ?? '',
-            'response' => trim(GeneralUtility::_GP('frc-captcha-solution')),
+            'response' => $captchaSolution,
             'remoteip' => GeneralUtility::getIndpEnv('REMOTE_ADDR'),
             'eu' => $this->configuration['eu'] ?? '',
             'enablepuzzle' => $this->configuration['enablepuzzle'] ?? ''
         ];
-        if(trim(GeneralUtility::_GP('frc-captcha-solution')) == '.UNSTARTED' || trim(GeneralUtility::_GP('frc-captcha-solution')) == '.UNFINISHED' || trim(GeneralUtility::_GP('frc-captcha-solution')) == '.FETCHING'){
+        if($captchaSolution == '.UNSTARTED' || $captchaSolution == '.UNFINISHED' || $captchaSolution == '.FETCHING'){
             $request['response'] = '';    
         }
         $result = ['verified' => false, 'error' => ''];
