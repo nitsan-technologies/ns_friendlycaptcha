@@ -7,7 +7,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 class TypoScriptAdapter
 {
-    protected CaptchaService $captchaService;
+    protected $captchaService;
 
     public function __construct(CaptchaService $captchaService)
     {
