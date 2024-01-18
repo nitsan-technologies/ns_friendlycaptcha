@@ -3,7 +3,6 @@
 namespace NITSAN\NsFriendlycaptcha\ViewHelpers\Form;
 
 use NITSAN\NsFriendlycaptcha\Services\CaptchaService;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper;
 
 class RecaptchaViewHelper extends AbstractFormFieldViewHelper
