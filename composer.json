@@ -1,7 +1,7 @@
 {
   "name": "nitsan/ns-friendlycaptcha",
   "type": "typo3-cms-extension",
-  "description": "Friendly Captcha is a new way to protect your forms from bots without asking users to solve puzzles. It fully complies with GDPR regulations. Their device solves the challenge in the background, so they don't have to do anything extra. *** Live Demo: https://demo.t3planet.com/t3-extensions/friendly-captcha *** Documentation & Free Support: https://t3planet.com/typo3-friendly-captcha-extension",
+  "description": "Friendly Captcha is a new way to protect your forms from bots without asking users to solve puzzles. It fully complies with GDPR regulations. Their device solves the challenge in the background, so they don't have to do anything extra.",
   "homepage": "https://demo.t3planet.com/t3-extensions/friendly-captcha",
   "license": "GPL-2.0+",
   "keywords": [
