@@ -1,8 +1,8 @@
 {
   "name": "nitsan/ns-friendlycaptcha",
   "type": "typo3-cms-extension",
-  "description": "Integrate official friendlycaptcha.com (Europe's most leading Captcha solution) to the TYPO3 core EXT:form extension. Live Demo: https://demo.t3planet.com/t3t-extensions/friendly-captcha Premium Support: https://t3planet.com/typo3-friendly-captcha-extension",
-  "homepage": "https://extensions.typo3.org/extension/ns_friendlycaptcha/",
+  "description": "Friendly Captcha is a new way to protect your forms from bots without asking users to solve puzzles. It fully complies with GDPR regulations. Their device solves the challenge in the background, so they don't have to do anything extra. *** Live Demo: https://demo.t3planet.com/t3-extensions/friendly-captcha *** Documentation & Free Support: https://t3planet.com/typo3-friendly-captcha-extension",
+  "homepage": "https://demo.t3planet.com/t3-extensions/friendly-captcha",
   "license": "GPL-2.0+",
   "keywords": [
     "TYPO3 CMS",
@@ -15,7 +15,8 @@
     "issues": "https://github.com/nitsan-technologies/ns_friendlycaptcha/issues"
   },
   "require": {
-    "typo3/cms-core": "^9.0 || ^10.0  || ^11.0"
+    "typo3/cms-core": "^9.0 || ^10.0  || ^11.0",
+    "helmich/typo3-typoscript-lint": "^3.1"
   },
   "suggest": {
 		"typo3/cms-form": "*"
@@ -30,7 +31,11 @@
   },
   "config": {
     "vendor-dir": ".Build/vendor/",
-    "bin-dir": ".Build/bin/"
+    "bin-dir": ".Build/bin/",
+    "allow-plugins": {
+      "typo3/cms-composer-installers": true,
+      "typo3/class-alias-loader": true
+    }
   },
   "extra": {
     "typo3/cms": {

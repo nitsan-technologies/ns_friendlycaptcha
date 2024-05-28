@@ -1,42 +1,47 @@
-plugin.tx_friendlycaptcha {
-    public_key = {$plugin.tx_friendlycaptcha.public_key}
-    public_key.wrap.cObject = COA
-    public_key.wrap.cObject {
-        10 = TEXT
-        10.value = <div class="frc-captcha" data-sitekey="|" data-callback="myCallback"></div>
+plugin {
+    tx_friendlycaptcha {
+        public_key = {$plugin.tx_friendlycaptcha.public_key}
+        public_key.wrap.cObject = COA
+        public_key.wrap.cObject {
+            10 = TEXT
+            10.value = <div class="frc-captcha" data-sitekey="|" data-callback="myCallback"></div>
+        }
+
+        secret_key = {$plugin.tx_friendlycaptcha.secret_key}
+
+        autocheck = {$plugin.tx_friendlycaptcha.autocheck}
+
+        eu = {$plugin.tx_friendlycaptcha.eu}
+
+        enablepuzzle = {$plugin.tx_friendlycaptcha.enablepuzzle}
+
+        invisibleCallback = onRecaptchaSubmit
+
+        captchaCssClass = frc-captcha
+    }
+    Tx_Formhandler.settings {
+        markers {
+            recaptcha_invisible = FLUIDTEMPLATE
+            recaptcha_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/Invisible.html
+
+            recaptcha_button_invisible = FLUIDTEMPLATE
+            recaptcha_button_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/ButtonInvisible.html
+        }
+    }
+    tx_form {
+        settings {
+            yamlConfigurations.1975 = EXT:ns_friendlycaptcha/Configuration/Yamlv9/BaseSetup.yaml
+        }
+        view {
+            partialRootPaths.1974 = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
+        }
     }
 
-    secret_key = {$plugin.tx_friendlycaptcha.secret_key}
-
-    autocheck = {$plugin.tx_friendlycaptcha.autocheck}
-
-    eu = {$plugin.tx_friendlycaptcha.eu}
-
-    enablepuzzle = {$plugin.tx_friendlycaptcha.enablepuzzle}
-
-    invisibleCallback = onRecaptchaSubmit
-
-    captchaCssClass = frc-captcha
 }
 
-
-# add settings for EXT:formhandler
-plugin.Tx_Formhandler.settings {
-    markers {
-        recaptcha_invisible = FLUIDTEMPLATE
-        recaptcha_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/Invisible.html
-
-        recaptcha_button_invisible = FLUIDTEMPLATE
-        recaptcha_button_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/ButtonInvisible.html
-    }
+page.includeJSFooterlibs {
+    recaptcha.external = 1
+    widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
+    widgetmin = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.min.js
+    custom = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/Custom.js
 }
-
-# add settings for EXT:form
-
-plugin.tx_form.settings.yamlConfigurations.1975 = EXT:ns_friendlycaptcha/Configuration/Yamlv9/BaseSetup.yaml
-plugin.tx_form.view.partialRootPaths.1974 = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
-
-page.includeJSFooterlibs.recaptcha.external = 1
-page.includeJSFooterlibs.widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
-page.includeJSFooterlibs.widgetmin = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.min.js
-page.includeJSFooterlibs.custom = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/Custom.js

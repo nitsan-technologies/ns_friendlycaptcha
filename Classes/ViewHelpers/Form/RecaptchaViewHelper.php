@@ -19,6 +19,7 @@ class RecaptchaViewHelper extends AbstractFormFieldViewHelper
     {
         $name = $this->getName();
         $this->registerFieldNameForFormTokenGeneration($name);
+        // @extensionScannerIgnoreLine
         if(version_compare(TYPO3_version, '10.0.0', '<=')){
             $lang = $GLOBALS['TYPO3_REQUEST']->getAttribute('language') ? $GLOBALS['TYPO3_REQUEST']->getAttribute('language')->getTwoLetterIsoCode() : 'en';
         } else {

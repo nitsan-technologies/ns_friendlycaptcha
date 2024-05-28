@@ -1,11 +1,16 @@
 <?php
 namespace NITSAN\NsFriendlycaptcha\Services;
 
+use Exception;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use GuzzleHttp;
+
+/**
+ * @extensionScannerIgnoreFile
+ */
 
 class CaptchaService
 {
@@ -51,10 +56,6 @@ class CaptchaService
             \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
         )->get('ns_friendlycaptcha');
 
-        if (!is_array($configuration)) {
-            $configuration = [];
-        }
-
         /** @var ConfigurationManagerInterface $configurationManager */
         $configurationManager = $this->objectManager->get(ConfigurationManagerInterface::class);
         $typoScriptConfiguration = $configurationManager->getConfiguration(
@@ -81,6 +82,7 @@ class CaptchaService
         }
 
         $this->configuration = $configuration;
+
     }
 
     public function getConfiguration(): array
@@ -91,8 +93,7 @@ class CaptchaService
     protected function getContentObjectRenderer(): ContentObjectRenderer
     {
         /** @var ContentObjectRenderer $contentRenderer */
-        $contentRenderer = $this->objectManager->get(ContentObjectRenderer::class);
-        return $contentRenderer;
+        return $this->objectManager->get(ContentObjectRenderer::class);
     }
 
     /**
@@ -156,6 +157,7 @@ class CaptchaService
      */
     public function validateReCaptcha(): array
     {
+        $captchaSolution = '';
         if (!$this->getShowCaptcha()) {
             return [
                 'verified' => true,
@@ -163,15 +165,17 @@ class CaptchaService
             ];
         }
 
-        if (!isset($this->configuration) || empty($this->configuration)) {
+        if (empty($this->configuration)) {
             if (! $this->objectManager instanceof \TYPO3\CMS\Extbase\Object\ObjectManager) {
                 /** @var \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager */
                 $objectManager = GeneralUtility::makeInstance(
                     \TYPO3\CMS\Extbase\Object\ObjectManager::class
                 );
+                // @extensionScannerIgnoreLine
                 $this->injectObjectManager($objectManager);
             }
         }
+        $captchaSolution = trim(GeneralUtility::_GP('frc-captcha-solution'));
 
         $request = [
             'site_key' => $this->configuration['public_key'] ?? '',
@@ -181,8 +185,8 @@ class CaptchaService
             'eu' => $this->configuration['eu'] ?? '',
             'enablepuzzle' => $this->configuration['enablepuzzle'] ?? ''
         ];
-        if(trim(GeneralUtility::_GP('frc-captcha-solution')) == '.UNSTARTED' || trim(GeneralUtility::_GP('frc-captcha-solution')) == '.UNFINISHED' || trim(GeneralUtility::_GP('frc-captcha-solution')) == '.FETCHING'){
-            $request['response'] = '';    
+        if( $captchaSolution == '.UNSTARTED' || $captchaSolution == '.UNFINISHED' || $captchaSolution == '.FETCHING'){
+            $request['response'] = '';
         }
         $result = ['verified' => false, 'error' => ''];
         if (empty($request['response'])) {
@@ -191,20 +195,16 @@ class CaptchaService
 
         // Server Side Velidation
         $response = $this->queryVerificationServer($request);
-        if($response['success']){
-            $result['verified'] = true;
-        }else {
+        $result['verified'] = true;
+        if(empty($response['success'])){
             if(isset($response['error-codes'])){
                 $result['error'] = $response['error-codes'];
             }
             if(isset($response['errors'])){
                 $result['error'] = 'missing-input-response';
-                // $result['error'] = \TYPO3\CMS\Extbase\Utility\LocalizationUtility::translate(
-                //     'error_recaptcha_missing-input-response',
-                //     'ns_friendlycaptcha'
-                // );
             }
         }
+
         return $result;
     }
 
