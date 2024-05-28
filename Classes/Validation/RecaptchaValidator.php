@@ -7,6 +7,8 @@ use NITSAN\NsFriendlycaptcha\Services\CaptchaService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Error\Result;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
 class RecaptchaValidator extends AbstractValidator
 {
@@ -18,12 +20,16 @@ class RecaptchaValidator extends AbstractValidator
      *
      * @param mixed $value The value that should be validated
      *
-     * @return \TYPO3\CMS\Extbase\Error\Result
+     * @return Result
+     * @throws ContentRenderingException
      */
-    public function validate(mixed $value = null): \TYPO3\CMS\Extbase\Error\Result
+    public function validate(mixed $value = null): Result
     {
-        if(GeneralUtility::_GP('g-recaptcha-response')){
-            $value = trim(GeneralUtility::_GP('g-recaptcha-response'));
+        $content = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+        $contentData = $content->getRequest()->getParsedBody();
+        $value = '';
+        if(!empty($contentData['g-recaptcha-response'])){
+            $value = trim($contentData['g-recaptcha-response']);
         }
         $this->result = new Result();
         if ($this->acceptsEmptyValues === false || $this->isEmpty($value) === false) {
@@ -36,16 +42,17 @@ class RecaptchaValidator extends AbstractValidator
      * Validate the captcha value from the request and add an error if not valid
      *
      * @param mixed $value The value
+     * @throws ContentRenderingException
      */
     public function isValid(mixed $value): void
     {
         /** @var CaptchaService $captcha */
         $captcha = GeneralUtility::getContainer()->get(CaptchaService::class);
-        
+
         if ($captcha !== null) {
             $status = $captcha->validateReCaptcha();
 
-            if ($status == false || $status['error'] !== '') {
+            if (!$status || $status['error'] !== '') {
                 $errorText = $this->translateErrorMessage('error_recaptcha_' . $status['error'], 'recaptcha');
 
                 if (empty($errorText)) {
