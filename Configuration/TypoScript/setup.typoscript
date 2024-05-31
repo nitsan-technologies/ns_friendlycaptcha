@@ -1,27 +1,34 @@
 # add settings for EXT:formhandler
-plugin.Tx_Formhandler.settings {
-    markers {
-        recaptcha_invisible = FLUIDTEMPLATE
-        recaptcha_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/Invisible.html
+plugin {
+    Tx_Formhandler.settings {
+        markers {
+            recaptcha_invisible = FLUIDTEMPLATE
+            recaptcha_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/Invisible.html
 
-        recaptcha_button_invisible = FLUIDTEMPLATE
-        recaptcha_button_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/ButtonInvisible.html
+            recaptcha_button_invisible = FLUIDTEMPLATE
+            recaptcha_button_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/ButtonInvisible.html
+        }
+    }
+    tx_form {
+        settings {
+            yamlConfigurations.1975 = EXT:ns_friendlycaptcha/Configuration/Yaml/BaseSetup.yaml
+        }
+        view {
+            partialRootPaths.1975 = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
+        }
     }
 }
 
 module.tx_form {
     settings {
         yamlConfigurations {
-            1975 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
+            1974 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
         }
     }
 }
 
-# add settings for EXT:form
-
-plugin.tx_form.settings.yamlConfigurations.1975 = EXT:ns_friendlycaptcha/Configuration/Yaml/BaseSetup.yaml
-plugin.tx_form.view.partialRootPaths.1975 = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
-
-page.includeJSFooterlibs.recaptcha.external = 1
-page.includeJSFooterlibs.widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
-page.includeJSFooterlibs.widgetmin = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.min.js
+page.includeJSFooterlibs {
+    recaptcha.external = 1
+    widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
+    widgetmin = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.min.js
+}

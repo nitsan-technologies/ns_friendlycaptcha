@@ -4,11 +4,14 @@ declare(strict_types=1);
 namespace NITSAN\NsFriendlycaptcha\ViewHelpers\Form;
 
 use NITSAN\NsFriendlycaptcha\Services\CaptchaService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
 class RecaptchaViewHelper extends AbstractFormFieldViewHelper
 {
-    protected $captchaService;
+    protected CaptchaService $captchaService;
 
     public function __construct(CaptchaService $captchaService)
     {
@@ -16,12 +19,18 @@ class RecaptchaViewHelper extends AbstractFormFieldViewHelper
         parent::__construct();
     }
 
+    /**
+     * @throws ContentRenderingException
+     */
     public function render(): string
     {
         $name = $this->getName();
         $this->registerFieldNameForFormTokenGeneration($name);
         if($GLOBALS['TSFE']){
-            $lang = $GLOBALS['TSFE']->language->getTwoLetterIsoCode() ? $GLOBALS['TSFE']->language->getTwoLetterIsoCode() : 'en';
+            $contents = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+            $currentLang = $contents->getRequest()->getAttributes();
+            // @extensionScannerIgnoreLine
+            $lang = $currentLang['language']->getTwoLetterIsoCode() ? $currentLang['language']->getTwoLetterIsoCode() : 'en';
             $container = $this->templateVariableContainer;
             $container->add('configuration', $this->captchaService->getConfiguration());
             $container->add('showCaptcha', $this->captchaService->getShowCaptcha());

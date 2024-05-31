@@ -3,57 +3,54 @@ declare(strict_types=1);
 
 namespace NITSAN\NsFriendlycaptcha\Services;
 
+use NITSAN\NsFriendlycaptcha\Exception\MissingException;
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use Psr\Container\ContainerInterface;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 use GuzzleHttp;
+use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
 class CaptchaService
 {
     /**
      * @var array
      */
-    protected $configuration = [];
+    protected array $configuration = [];
 
     /**
      * Guzzle Http Client
      * @var GuzzleHttp\Client
      */
-    protected $client = null;
+    protected GuzzleHttp\Client $client;
 
-    public function __construct(
-        ConfigurationManager $configurationManager,
-        ExtensionConfiguration $extensionConfiguration,
-        TypoScriptService $typoScriptService,
-        ContentObjectRenderer $contentObjectRenderer
-    )
+    /**
+     * @throws MissingException
+     */
+    public function __construct()
     {
         $this->initialize();
     }
 
     public static function getInstance(): CaptchaService
     {
-        $instance = GeneralUtility::makeInstance(self::class);
-        return $instance;
+        return GeneralUtility::makeInstance(self::class);
     }
 
     /**
-     * @throws \NITSAN\NsFriendlycaptcha\Exception\MissingException
+     * @throws MissingException
      */
-    protected function initialize()
+    protected function initialize(): void
     {
-        $configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-            \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
+        $configuration = GeneralUtility::makeInstance(
+            ExtensionConfiguration::class
         )->get('ns_friendlycaptcha');
-
-        if (!is_array($configuration)) {
-            $configuration = [];
-        }
 
         /** @var ConfigurationManagerInterface $configurationManager */
         $configurationManager = GeneralUtility::makeInstance(ConfigurationManagerInterface::class);
@@ -65,7 +62,7 @@ class CaptchaService
         if (!empty($typoScriptConfiguration) && is_array($typoScriptConfiguration)) {
             /** @var TypoScriptService $typoScriptService */
             $typoScriptService = GeneralUtility::makeInstance(TypoScriptService::class);
-            \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule(
+            ArrayUtility::mergeRecursiveWithOverrule(
                 $configuration,
                 $typoScriptService->convertPlainArrayToTypoScriptArray($typoScriptConfiguration),
                 true,
@@ -74,7 +71,7 @@ class CaptchaService
         }
 
         if (!is_array($configuration) || empty($configuration)) {
-            throw new \NITSAN\NsFriendlycaptcha\Exception\MissingException(
+            throw new MissingException(
                 'Please configure plugin.tx_recaptcha. before rendering the recaptcha',
                 1417680291
             );
@@ -91,8 +88,7 @@ class CaptchaService
     protected function getContentObjectRenderer(): ContentObjectRenderer
     {
         /** @var ContentObjectRenderer $contentRenderer */
-        $contentRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
-        return $contentRenderer;
+        return GeneralUtility::makeInstance(ContentObjectRenderer::class);
     }
 
     /**
@@ -101,7 +97,7 @@ class CaptchaService
      */
     protected function isInRobotMode(): bool
     {
-        $this->configuration['robotMode'] = isset($this->configuration['robotMode']) ? $this->configuration['robotMode'] : FALSE;
+        $this->configuration['robotMode'] = $this->configuration['robotMode'] ?? FALSE;
         return (bool) $this->configuration['robotMode'];
     }
 
@@ -125,7 +121,9 @@ class CaptchaService
     public function getShowCaptcha(): bool
     {
         return !$this->isInRobotMode()
-            && (\TYPO3\CMS\Core\Http\ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend() || !$this->isDevelopmentMode() || $this->isEnforceCaptcha());
+            && (ApplicationType::fromRequest(
+                $GLOBALS['TYPO3_REQUEST'])->isBackend() || !$this->isDevelopmentMode() || $this->isEnforceCaptcha()
+            );
     }
 
     /**
@@ -153,6 +151,7 @@ class CaptchaService
      * Validate reCAPTCHA challenge/response
      *
      * @return array Array with verified- (boolean) and error-code (string)
+     * @throws ContentRenderingException
      */
     public function validateReCaptcha(): array
     {
@@ -162,8 +161,9 @@ class CaptchaService
                 'error' => ''
             ];
         }
-
-        $captchaSolution = trim(GeneralUtility::_GP('frc-captcha-solution') ?? '');
+        $content = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+        $contentData = $content->getRequest()->getParsedBody();
+        $captchaSolution = trim($contentData['frc-captcha-solution'] ?? '');
 
         $request = [
             'site_key' => $this->configuration['public_key'] ?? '',
@@ -174,7 +174,7 @@ class CaptchaService
             'enablepuzzle' => $this->configuration['enablepuzzle'] ?? ''
         ];
         if($captchaSolution == '.UNSTARTED' || $captchaSolution == '.UNFINISHED' || $captchaSolution == '.FETCHING'){
-            $request['response'] = '';    
+            $request['response'] = '';
         }
         $result = ['verified' => false, 'error' => ''];
         if (empty($request['response'])) {

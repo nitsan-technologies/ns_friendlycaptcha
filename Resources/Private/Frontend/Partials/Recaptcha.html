@@ -19,46 +19,48 @@
 			</r:form.recaptcha>
 		</f:then>
 		<f:else>
-	<f:render partial="Field/Field" arguments="{element: element}" contentAs="elementContent">
-		<f:format.raw><r:form.recaptcha>
-			<f:if condition="{showCaptcha}">
-				<f:then>
-					<f:form.hidden
-						property="{element.identifier}"
-						id="{element.uniqueIdentifier}"
-						value="1"
-						additionalAttributes="{formvh:translateElementProperty(element: element, property: 'fluidAdditionalAttributes')}"
-					/>
-					<f:variable name="url">https://api.friendlycaptcha.com/api/v1/puzzle</f:variable>
-					<f:if condition="{configuration.eu} == 1">
-						<f:then>
-							<f:variable name="url">https://eu-api.friendlycaptcha.eu/api/v1/siteverify</f:variable>
-							<f:if condition="{configuration.enablepuzzle} == 1">
-								<f:variable name="url">https://eu-api.friendlycaptcha.eu/api/v1/puzzle</f:variable>
-							</f:if>
-						</f:then>
-					</f:if>
-					<f:variable name="start">none</f:variable>
-					<f:if condition="{configuration.autocheck} == 'Auto check'">
-						<f:then>
-							<f:variable name="start">auto</f:variable>
-						</f:then>
-					</f:if>
-					<f:if condition="{configuration.autocheck} == 'Check on Focus'">
-						<f:then>
-							<f:variable name="start">focus</f:variable>
-						</f:then>
-					</f:if>
-					<div class="frc-captcha" data-sitekey="{configuration.public_key}" data-callback="myCallback" data-puzzle-endpoint="{url}" data-start="{start}" data-lang="{lang}"></div>					
-				</f:then>
-				<f:else>
-					<div class="recaptcha-development-mode">
-						Development mode active. Do not expect the captcha to appear
-					</div>
-				</f:else>
-			</f:if>
-		</r:form.recaptcha></f:format.raw>
-	</f:render>
+			<f:render partial="Field/Field" arguments="{element: element}" contentAs="elementContent">
+				<f:format.raw>
+					<r:form.recaptcha>
+						<f:if condition="{showCaptcha}">
+							<f:then>
+								<f:form.hidden
+									property="{element.identifier}"
+									id="{element.uniqueIdentifier}"
+									value="1"
+									additionalAttributes="{formvh:translateElementProperty(element: element, property: 'fluidAdditionalAttributes')}"
+								/>
+								<f:variable name="url">https://api.friendlycaptcha.com/api/v1/puzzle</f:variable>
+								<f:if condition="{configuration.eu} == 1">
+									<f:then>
+										<f:variable name="url">https://eu-api.friendlycaptcha.eu/api/v1/siteverify</f:variable>
+										<f:if condition="{configuration.enablepuzzle} == 1">
+											<f:variable name="url">https://eu-api.friendlycaptcha.eu/api/v1/puzzle</f:variable>
+										</f:if>
+									</f:then>
+								</f:if>
+								<f:variable name="start">none</f:variable>
+								<f:if condition="{configuration.autocheck} == 'Auto check'">
+									<f:then>
+										<f:variable name="start">auto</f:variable>
+									</f:then>
+								</f:if>
+								<f:if condition="{configuration.autocheck} == 'Check on Focus'">
+									<f:then>
+										<f:variable name="start">focus</f:variable>
+									</f:then>
+								</f:if>
+								<div class="frc-captcha" data-sitekey="{configuration.public_key}" data-callback="myCallback" data-puzzle-endpoint="{url}" data-start="{start}" data-lang="{lang}"></div>
+							</f:then>
+							<f:else>
+								<div class="recaptcha-development-mode">
+									Development mode active. Do not expect the captcha to appear
+								</div>
+							</f:else>
+						</f:if>
+					</r:form.recaptcha>
+				</f:format.raw>
+			</f:render>
 		</f:else>
 	</f:if>
 </formvh:renderRenderable>

@@ -4,23 +4,32 @@ namespace NITSAN\NsFriendlycaptcha\Adapter;
 
 use NITSAN\NsFriendlycaptcha\Services\CaptchaService;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
 class TypoScriptAdapter
 {
-    protected $captchaService;
+    protected CaptchaService $captchaService;
 
     public function __construct(CaptchaService $captchaService)
     {
         $this->captchaService = $captchaService;
     }
 
+    /**
+     * @throws ContentRenderingException
+     */
     public function render(): string
     {
-        if ($this->captchaService !== null) {
-            $output = $this->captchaService->getReCaptcha();
+        $output = LocalizationUtility::translate(
+            'error_captcha.notinstalled',
+            'Recaptcha'
+        );
 
+        if (!empty($this->captchaService)) {
+            $output = $this->captchaService->getReCaptcha();
             $status = $this->captchaService->validateReCaptcha();
-            if ($status == false || $status['error'] !== '') {
+
+            if (!$status || $status['error'] !== '') {
                 $output .= '<span class="error">' .
                     LocalizationUtility::translate(
                         'error_recaptcha_' . $status['error'],
@@ -28,11 +37,6 @@ class TypoScriptAdapter
                     ) .
                     '</span>';
             }
-        } else {
-            $output = LocalizationUtility::translate(
-                'error_captcha.notinstalled',
-                'Recaptcha'
-            );
         }
 
         return $output;

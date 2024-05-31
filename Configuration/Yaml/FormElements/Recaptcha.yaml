@@ -37,8 +37,6 @@ TYPO3:
                 group: custom
                 groupSorting: 700
                 iconIdentifier: t3-form-icon-recaptcha
-
               implementationClassName: NITSAN\NsFriendlycaptcha\Domain\Model\FormElements\RecaptchaElement
-
               properties:
                 containerClassAttribute: recaptcha
