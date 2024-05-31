@@ -11,24 +11,24 @@ call_user_func(function () {
         ['source' => 'EXT:ns_friendlycaptcha/Resources/Public/Images/reCaptcha_sw.svg']
     );
 
-
-if(version_compare(TYPO3_version, '10.0.0', '<=')){
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('
-module.tx_form.settings.yamlConfigurations {
-    1974 = EXT:ns_friendlycaptcha/Configuration/Yamlv9/BaseSetup.yaml
-    1975 = EXT:ns_friendlycaptcha/Configuration/Yamlv9/FormEditorSetup.yaml
-}
-    ');
-} else {
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('
-module.tx_form {
-    settings {
-        yamlConfigurations {
-            1974 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
-        }
-    }
-}
-    ');
+    // @extensionScannerIgnoreLine
+    if(version_compare(TYPO3_version, '10.0.0', '<=')){
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('
+            module.tx_form.settings.yamlConfigurations {
+                1974 = EXT:ns_friendlycaptcha/Configuration/Yamlv9/BaseSetup.yaml
+                1975 = EXT:ns_friendlycaptcha/Configuration/Yamlv9/FormEditorSetup.yaml
+            }
+        ');
+    } else {
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('
+            module.tx_form {
+                settings {
+                    yamlConfigurations {
+                        1974 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
+                    }
+                }
+            }
+        ');
 }
     
 });

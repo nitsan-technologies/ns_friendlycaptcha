@@ -26,7 +26,7 @@ class Recaptcha extends AbstractErrorCheck
         $checkFailed = '';
         if ($captcha !== null) {
             $status = $captcha->validateReCaptcha();
-            if ($status == false || $status['error'] !== '') {
+            if (!$status || $status['error'] !== '') {
                 $checkFailed = $this->getCheckFailed();
             }
         }

@@ -39,16 +39,17 @@ class RecaptchaValidator extends AbstractValidator
     public function isValid($value)
     {
         /** @var CaptchaService $captcha */
+        // @extensionScannerIgnoreLine
         if(version_compare(TYPO3_version, '10.0.0', '<=')){
             $captcha = \NITSAN\NsFriendlycaptcha\Services\CaptchaService::getInstance();
         } else {
             $captcha = GeneralUtility::getContainer()->get(CaptchaService::class);
         }
-        
+
         if ($captcha !== null) {
             $status = $captcha->validateReCaptcha();
 
-            if ($status == false || $status['error'] !== '') {
+            if (!$status || $status['error'] !== '') {
                 $errorText = $this->translateErrorMessage('error_recaptcha_' . $status['error'], 'recaptcha');
 
                 if (empty($errorText)) {

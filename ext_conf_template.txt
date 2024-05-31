@@ -1,5 +1,5 @@
 # cat=plugin.nsfriendlycaptcha; type=string; label=Friendly Captcha Site key
-public_key = 
+public_key =
 
 # cat=plugin.nsfriendlycaptcha; type=string; label=Friendly Captcha language
 lang = en

@@ -16,11 +16,16 @@ class TypoScriptAdapter
 
     public function render(): string
     {
+        $output = LocalizationUtility::translate(
+            'error_captcha.notinstalled',
+            'Recaptcha'
+        );
+
         if ($this->captchaService !== null) {
             $output = $this->captchaService->getReCaptcha();
 
             $status = $this->captchaService->validateReCaptcha();
-            if ($status == false || $status['error'] !== '') {
+            if (!$status || $status['error'] !== '') {
                 $output .= '<span class="error">' .
                     LocalizationUtility::translate(
                         'error_recaptcha_' . $status['error'],
@@ -28,11 +33,6 @@ class TypoScriptAdapter
                     ) .
                     '</span>';
             }
-        } else {
-            $output = LocalizationUtility::translate(
-                'error_captcha.notinstalled',
-                'Recaptcha'
-            );
         }
 
         return $output;
