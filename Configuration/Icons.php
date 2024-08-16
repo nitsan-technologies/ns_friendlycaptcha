@@ -8,4 +8,3 @@ return [
         'source' => 'EXT:ns_friendlycaptcha/Resources/Public/Icons/friendlycaptcha.svg',
     ],
 ];
-

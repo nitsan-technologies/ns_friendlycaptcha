@@ -1,0 +1,17 @@
+plugin.tx_friendlycaptcha {
+    # cat=plugin.nsfriendlycaptcha//03; type=string; label= Site key: Friendly Captcha Site key
+    public_key = 
+
+    # cat=plugin.nsfriendlycaptcha//04; type=string; label= Secret Key: Friendly Captcha Secret Key
+    secret_key = 
+
+    # cat=plugin.nsfriendlycaptcha//08; type=options[LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/Backend.xlf:autocheck.auto=auto,LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/Backend.xlf:autocheck.focus=focus,LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/Backend.xlf:autocheck.none=none]; label=Automization Options
+    autocheck = auto
+
+    # cat=plugin.nsfriendlycaptcha//09; type=boolean; label= Enable EU endpoint
+	eu = 1
+
+    # cat=plugin.nsfriendlycaptcha//09; type=boolean; label= Enable PUZZLE
+	enablepuzzle = 0
+    
+}

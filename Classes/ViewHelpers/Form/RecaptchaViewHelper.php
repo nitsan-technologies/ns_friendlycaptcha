@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace NITSAN\NsFriendlycaptcha\ViewHelpers\Form;
@@ -26,7 +27,7 @@ class RecaptchaViewHelper extends AbstractFormFieldViewHelper
     {
         $name = $this->getName();
         $this->registerFieldNameForFormTokenGeneration($name);
-        if($GLOBALS['TSFE']){
+        if($GLOBALS['TSFE']) {
             $contents = GeneralUtility::makeInstance(ContentObjectRenderer::class);
             $currentLang = $contents->getRequest()->getAttributes();
             // @extensionScannerIgnoreLine
@@ -37,7 +38,7 @@ class RecaptchaViewHelper extends AbstractFormFieldViewHelper
             $container->add('name', $name);
             $container->add('lang', $lang);
             $content = $this->renderChildren();
-    
+
             $container->remove('name');
             $container->remove('showCaptcha');
             $container->remove('configuration');

@@ -5,9 +5,7 @@ services:
     autoconfigure: true
     public: false
 
-  NITSAN\NsFriendlycaptcha\:
-    resource: '../Classes/*'
-    exclude: '../Classes/Domain/Model/*'
+ 
 
   NITSAN\NsFriendlycaptcha\Services\CaptchaService:
     public: true
