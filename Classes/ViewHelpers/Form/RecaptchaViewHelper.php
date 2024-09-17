@@ -30,8 +30,7 @@ class RecaptchaViewHelper extends AbstractFormFieldViewHelper
         if($GLOBALS['TSFE']) {
             $contents = GeneralUtility::makeInstance(ContentObjectRenderer::class);
             $currentLang = $contents->getRequest()->getAttributes();
-            // @extensionScannerIgnoreLine
-            $lang = $currentLang['language']->getTwoLetterIsoCode() ? $currentLang['language']->getTwoLetterIsoCode() : 'en';
+            $lang = $currentLang['language']->getLocale()->getLanguageCode() ? $currentLang['language']->getLocale()->getLanguageCode() : 'en';
             $container = $this->templateVariableContainer;
             $container->add('configuration', $this->captchaService->getConfiguration());
             $container->add('showCaptcha', $this->captchaService->getShowCaptcha());
