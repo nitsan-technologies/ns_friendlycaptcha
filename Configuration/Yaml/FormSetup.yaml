@@ -13,9 +13,9 @@ TYPO3:
       prototypes:
         standard:
           formEditor:
-            dynamicRequireJsModules:
+            dynamicJavaScriptModules:
               additionalViewModelModules:
-                1660555330: TYPO3/CMS/NsFriendlycaptcha/Backend/FormEditor/RecaptchaViewModel
+                1730208326: '@nitsan/ns-friendlycaptcha/backend/form-editor/view-model.js'
 
             formEditorPartials:
               FormElement-Recaptcha: Stage/SimpleTemplate
