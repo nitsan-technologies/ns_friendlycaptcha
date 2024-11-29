@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace NITSAN\NsFriendlycaptcha\Validation;
@@ -28,7 +29,7 @@ class RecaptchaValidator extends AbstractValidator
         $content = GeneralUtility::makeInstance(ContentObjectRenderer::class);
         $contentData = $content->getRequest()->getParsedBody();
         $value = '';
-        if(!empty($contentData['g-recaptcha-response'])){
+        if(!empty($contentData['g-recaptcha-response'])) {
             $value = trim($contentData['g-recaptcha-response']);
         }
         $this->result = new Result();

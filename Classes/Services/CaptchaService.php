@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace NITSAN\NsFriendlycaptcha\Services;
@@ -97,7 +98,7 @@ class CaptchaService
      */
     protected function isInRobotMode(): bool
     {
-        $this->configuration['robotMode'] = $this->configuration['robotMode'] ?? FALSE;
+        $this->configuration['robotMode'] = $this->configuration['robotMode'] ?? false;
         return (bool) $this->configuration['robotMode'];
     }
 
@@ -107,7 +108,7 @@ class CaptchaService
      */
     protected function isDevelopmentMode(): bool
     {
-        return (bool) FALSE;
+        return (bool) false;
     }
 
     /**
@@ -121,8 +122,10 @@ class CaptchaService
     public function getShowCaptcha(): bool
     {
         return !$this->isInRobotMode()
-            && (ApplicationType::fromRequest(
-                $GLOBALS['TYPO3_REQUEST'])->isBackend() || !$this->isDevelopmentMode() || $this->isEnforceCaptcha()
+            && (
+                ApplicationType::fromRequest(
+                    $GLOBALS['TYPO3_REQUEST']
+                )->isBackend() || !$this->isDevelopmentMode() || $this->isEnforceCaptcha()
             );
     }
 
@@ -167,13 +170,13 @@ class CaptchaService
 
         $request = [
             'site_key' => $this->configuration['public_key'] ?? '',
-            'secreat_key'=>  $this->configuration['secret_key'] ?? '',
+            'secreat_key' =>  $this->configuration['secret_key'] ?? '',
             'response' => $captchaSolution,
             'remoteip' => GeneralUtility::getIndpEnv('REMOTE_ADDR'),
             'eu' => $this->configuration['eu'] ?? '',
             'enablepuzzle' => $this->configuration['enablepuzzle'] ?? ''
         ];
-        if($captchaSolution == '.UNSTARTED' || $captchaSolution == '.UNFINISHED' || $captchaSolution == '.FETCHING'){
+        if($captchaSolution == '.UNSTARTED' || $captchaSolution == '.UNFINISHED' || $captchaSolution == '.FETCHING') {
             $request['response'] = '';
         }
         $result = ['verified' => false, 'error' => ''];
@@ -183,13 +186,13 @@ class CaptchaService
 
         // Server Side Velidation
         $response = $this->queryVerificationServer($request);
-        if($response['success']){
+        if($response['success']) {
             $result['verified'] = true;
-        }else {
-            if(isset($response['error-codes'])){
+        } else {
+            if(isset($response['error-codes'])) {
                 $result['error'] = $response['error-codes'];
             }
-            if(isset($response['errors'])){
+            if(isset($response['errors'])) {
                 $result['error'] = 'missing-input-response';
             }
         }
@@ -206,11 +209,11 @@ class CaptchaService
     protected function queryVerificationServer(array $data): array
     {
         $verifyServerInfo = 'https://api.friendlycaptcha.com/api/v1/siteverify';
-        if($data['eu']){
+        if($data['eu']) {
             $verifyServerInfo = 'https://eu-api.friendlycaptcha.eu/api/v1/siteverify';
         }
 
-        if(empty($data['secreat_key'])){
+        if(empty($data['secreat_key'])) {
             return [
                 'success' => false,
                 'error-codes' => 'Invalid Secret Key'
@@ -223,7 +226,7 @@ class CaptchaService
             'sitekey' => $data['site_key'],
         ];
 
-        $body =json_encode($params);
+        $body = json_encode($params);
         $options = [
             'http_errors' => true,
                 'headers' => [
@@ -232,17 +235,17 @@ class CaptchaService
                 ],
             'body' => $body,
         ];
-        try{
+        try {
             $response = $this->getClient()->post($verifyServerInfo, $options)->getBody()->getContents();
             return json_decode($response, true);
         } catch (\GuzzleHttp\Exception\RequestException $e) {
-            if(strpos($e->getMessage(), "secret_invalid")){
+            if(strpos($e->getMessage(), "secret_invalid")) {
                 return [
                     'success' => false,
                     'error-codes' => 'Invalid Secret Key',
                     'message' => $e
                 ];
-            }else {
+            } else {
                 return [
                     'success' => false,
                     'error-codes' => 'validation-server-not-responding',

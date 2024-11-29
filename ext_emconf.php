@@ -9,10 +9,10 @@ $EM_CONF['ns_friendlycaptcha'] = [
     'author_email' => 'sanjay@nitsan.in',
     'author_company' => 'T3Planet // NITSAN',
     'state' => 'stable',
-    'version' => '12.1.0',
+    'version' => '13.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '12.0.0-12.5.99',
+            'typo3' => '12.0.0-13.9.99',
         ],
         'conflicts' => [],
         'suggests' => [],
