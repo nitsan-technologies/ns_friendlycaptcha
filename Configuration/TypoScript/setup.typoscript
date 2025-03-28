@@ -30,5 +30,12 @@ module.tx_form {
 page.includeJSFooterlibs {
     recaptcha.external = 1
     widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
+    widgetmodule.type = module
+    widgetmodule.async = 1
+    widgetmodule.defer = 1
+
     widgetmin = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.min.js
+    widgetmin.nomodule = 1
+    widgetmin.async = 1
+    widgetmin.defer = 1
 }
