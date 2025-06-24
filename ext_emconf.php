@@ -1,13 +1,13 @@
 <?php
 
 $EM_CONF['ns_friendlycaptcha'] = [
-    'title' => 'Friendly Captcha',
-    'description' => "Friendly Captcha is a new way to protect your forms from bots without asking users to solve puzzles. It fully complies with GDPR regulations. Their device solves the challenge in the background, so they don't have to do anything extra. 
-    *** Live Demo: https://demo.t3planet.com/t3-extensions/friendly-captcha *** Documentation & Free Support: https://t3planet.com/typo3-friendly-captcha-extension",
+    'title' => 'TYPO3 Friendly Captcha',
+    'description' => 'Protect your TYPO3 forms from bots without annoying puzzles. Friendly Captcha runs seamlessly in the background and complies fully with GDPR regulations.', 
+    
     'category' => 'plugin',
-    'author' => 'T3: Nilesh Malankiya, T3: Maulik Lakhnotra, QA: Krishna Dhapa',
-    'author_email' => 'sanjay@nitsan.in',
-    'author_company' => 'T3Planet // NITSAN',
+    'author' => 'Team T3Planet',
+    'author_email' => 'info@t3planet.de',
+    'author_company' => 'T3Planet',
     'state' => 'stable',
     'version' => '13.0.0',
     'constraints' => [
