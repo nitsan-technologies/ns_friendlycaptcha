@@ -9,6 +9,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class RecaptchaViewHelper extends AbstractFormFieldViewHelper
 {
@@ -27,7 +28,7 @@ class RecaptchaViewHelper extends AbstractFormFieldViewHelper
     {
         $name = $this->getName();
         $this->registerFieldNameForFormTokenGeneration($name);
-        if($GLOBALS['TSFE']) {
+        if(isset($GLOBALS['TSFE']) && $GLOBALS['TSFE'] instanceof TypoScriptFrontendController){
             $contents = GeneralUtility::makeInstance(ContentObjectRenderer::class);
             $currentLang = $contents->getRequest()->getAttributes();
             $lang = $currentLang['language']->getLocale()->getLanguageCode() ? $currentLang['language']->getLocale()->getLanguageCode() : 'en';
