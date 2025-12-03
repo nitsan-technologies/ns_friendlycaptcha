@@ -97,16 +97,6 @@ class CaptchaService
     }
 
     /**
-     * Get development mode for captcha rendering even if TYPO3_CONTENT is not development
-     * Based on this the captcha does not get rendered or validated
-     */
-    protected function isInRobotMode(): bool
-    {
-        $this->configuration['robotMode'] = isset($this->configuration['robotMode']) ? $this->configuration['robotMode'] : FALSE;
-        return (bool) $this->configuration['robotMode'];
-    }
-
-    /**
      * Get development mode by TYPO3_CONTEXT
      * Based on this the captcha does not get rendered or validated
      */
@@ -125,8 +115,7 @@ class CaptchaService
 
     public function getShowCaptcha(): bool
     {
-        return !$this->isInRobotMode()
-            && (TYPO3_MODE == 'BE' || !$this->isDevelopmentMode() || $this->isEnforceCaptcha());
+        return (TYPO3_MODE == 'BE' || !$this->isDevelopmentMode() || $this->isEnforceCaptcha());
     }
 
     /**
