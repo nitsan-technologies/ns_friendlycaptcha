@@ -28,6 +28,14 @@ plugin {
     }
 }
 
+module.tx_form {
+    settings {
+        yamlConfigurations {
+            1974 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
+        }
+    }
+}
+
 page.includeJSFooterlibs {
     recaptcha.external = 1
     widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
