@@ -1,3 +1,12 @@
+page = PAGE
+page.typeNum = 0
+
+page.10 = CONTENT
+page.10.table = tt_content
+page.10.select {
+  orderBy = sorting
+  where = {#colPos}=0
+}
 # add settings for EXT:formhandler
 plugin {
     Tx_Formhandler.settings {
