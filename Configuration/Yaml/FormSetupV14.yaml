@@ -1,0 +1,19 @@
+imports:
+  - { resource: "./Validators/Recaptcha.yaml" }
+
+  - { resource: "./FormElements/Form.yaml" }
+  - { resource: "./FormElements/Recaptcha.yaml" }
+
+  - { resource: "./Finishers/EmailToReceiver.yaml" }
+  - { resource: "./Finishers/EmailToSender.yaml" }
+
+TYPO3:
+  CMS:
+    Form:
+      prototypes:
+        standard:
+          formEditor:
+            dynamicJavaScriptModules:
+              additionalViewModelModules:
+                1730208326: '@nitsan/ns-friendlycaptcha/backend/form-editor/view-model.js'
+  

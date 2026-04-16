@@ -15,7 +15,7 @@ if ($versionNumber['version_main'] <= 13) {
         module.tx_form {
             settings {
                 yamlConfigurations {
-                    1974 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
+                    1974 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetupV14.yaml
                 }
             }
         }
