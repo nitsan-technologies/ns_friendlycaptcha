@@ -8,7 +8,7 @@ secret_key =
 autocheck = Auto check
 
 # cat=Friendly Captcha//09; type=boolean; label= Enable EU endpoint
-eu = 1
+eu = 0
 
 # cat=Friendly Captcha//10; type=boolean; label= Enable PUZZLE
 enablepuzzle = 0
