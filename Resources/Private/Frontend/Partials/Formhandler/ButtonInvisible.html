@@ -5,18 +5,18 @@
 	<r:form.recaptcha>
 		<f:if condition="{showCaptcha}">
 			<f:then>
-				<f:form.button
+				<button
 					class="btn btn-primary {configuration.captchaCssClass}"
 					data="{
 						sitekey: '{configuration.public_key}',
 						callback: configuration.invisibleCallback
 					}"
-				>###LLL:submit###</f:form.button>
+				>###LLL:submit###</button>
 			</f:then>
 			<f:else>
-				<f:form.button
+				<button
 					class="btn btn-primary"
-				>###LLL:submit###</f:form.button>
+				>###LLL:submit###</button>
 				<div class="recaptcha-development-mode">
 					Development mode active. Do not expect the captcha to appear
 				</div>
