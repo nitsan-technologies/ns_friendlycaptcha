@@ -4,8 +4,8 @@ public_key =
 # cat=Friendly Captcha//04; type=string; label= Secret Key: Friendly Captcha Secret Key
 secret_key = 
 
-# cat=Friendly Captcha//08; type=options[Auto check,Check on Focus,Manual]; label=Automization Options
-autocheck = Auto check
+# cat=Friendly Captcha//08; type=options[Auto check:auto,Check on Focus:focus,Manual:none]; label=Automization Options
+autocheck = auto
 
 # cat=Friendly Captcha//09; type=boolean; label= Enable EU endpoint
 eu = 0

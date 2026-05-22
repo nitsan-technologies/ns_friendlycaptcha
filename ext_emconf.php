@@ -1,9 +1,10 @@
 <?php
 
+defined('TYPO3') or die();
+
 $EM_CONF['ns_friendlycaptcha'] = [
     'title' => 'TYPO3 Friendly Captcha',
-    'description' => 'Protect your TYPO3 forms from bots without annoying puzzles. Friendly Captcha runs seamlessly in the background and complies fully with GDPR regulations.', 
-    
+    'description' => 'Protect your TYPO3 forms from bots without annoying puzzles. Friendly Captcha runs seamlessly in the background and complies fully with GDPR regulations.',
     'category' => 'plugin',
     'author' => 'Team T3Planet',
     'author_email' => 'info@t3planet.de',

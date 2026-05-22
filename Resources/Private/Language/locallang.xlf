@@ -21,6 +21,9 @@
 			<trans-unit id="error_recaptcha_invalid-keys" xml:space="preserve">
 				<source>The private key is invalid or missing</source>
 			</trans-unit>
+			<trans-unit id="error_recaptcha_validation-server-not-responding" xml:space="preserve">
+				<source>The captcha validation server is not responding.</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

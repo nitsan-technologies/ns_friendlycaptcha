@@ -1,0 +1,36 @@
+categories:
+  friendlycaptcha: ~
+
+settings:
+  nitsan.friendlycaptcha.publicKey:
+    default: ''
+    type: string
+    category: friendlycaptcha
+  nitsan.friendlycaptcha.secretKey:
+    default: ''
+    type: string
+    category: friendlycaptcha
+  nitsan.friendlycaptcha.autocheck:
+    default: auto
+    type: string
+    enum:
+      auto: 'Auto check'
+      focus: 'Check on Focus'
+      none: Manual
+    category: friendlycaptcha
+  nitsan.friendlycaptcha.eu:
+    default: 0
+    type: bool
+    category: friendlycaptcha
+  nitsan.friendlycaptcha.enablepuzzle:
+    default: 0
+    type: bool
+    category: friendlycaptcha
+  nitsan.friendlycaptcha.enforceCaptcha:
+    default: 0
+    type: bool
+    category: friendlycaptcha
+  nitsan.friendlycaptcha.robotMode:
+    default: 0
+    type: bool
+    category: friendlycaptcha

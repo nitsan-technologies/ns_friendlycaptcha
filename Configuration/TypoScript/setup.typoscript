@@ -1,41 +1,43 @@
-# add settings for EXT:formhandler
-plugin {
-    Tx_Formhandler.settings {
-        markers {
-            recaptcha_invisible = FLUIDTEMPLATE
-            recaptcha_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/Invisible.html
-
-            recaptcha_button_invisible = FLUIDTEMPLATE
-            recaptcha_button_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/ButtonInvisible.html
-        }
-    }
-    tx_form {
-        settings {
-            yamlConfigurations.1975 = EXT:ns_friendlycaptcha/Configuration/Yaml/BaseSetup.yaml
-        }
-        view {
-            partialRootPaths.1975 = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
-        }
-    }
+plugin.tx_ns_friendlycaptcha {
+  public_key = {$plugin.tx_ns_friendlycaptcha.public_key ?? $nitsan.friendlycaptcha.publicKey}
+  secret_key = {$plugin.tx_ns_friendlycaptcha.secret_key ?? $nitsan.friendlycaptcha.secretKey}
+  autocheck = {$plugin.tx_ns_friendlycaptcha.autocheck ?? $nitsan.friendlycaptcha.autocheck}
+  eu = {$plugin.tx_ns_friendlycaptcha.eu ?? $nitsan.friendlycaptcha.eu}
+  enablepuzzle = {$plugin.tx_ns_friendlycaptcha.enablepuzzle ?? $nitsan.friendlycaptcha.enablepuzzle}
+  enforceCaptcha = {$plugin.tx_ns_friendlycaptcha.enforceCaptcha ?? $nitsan.friendlycaptcha.enforceCaptcha}
+  robotMode = {$plugin.tx_ns_friendlycaptcha.robotMode ?? $nitsan.friendlycaptcha.robotMode}
 }
 
-module.tx_form {
-    settings {
-        yamlConfigurations {
-            1974 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
-        }
+# Formhandler integration
+plugin {
+  Tx_Formhandler.settings {
+    markers {
+      recaptcha_invisible = FLUIDTEMPLATE
+      recaptcha_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Partials/Formhandler/Invisible.html
+
+      recaptcha_button_invisible = FLUIDTEMPLATE
+      recaptcha_button_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Partials/Formhandler/ButtonInvisible.html
     }
+  }
+  tx_form {
+    settings {
+      yamlConfigurations.1974 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
+    }
+    view {
+      partialRootPaths.1974 = EXT:ns_friendlycaptcha/Resources/Private/Partials/
+    }
+  }
 }
 
 page.includeJSFooterlibs {
-    recaptcha.external = 1
-    widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
-    widgetmodule.type = module
-    widgetmodule.async = 1
-    widgetmodule.defer = 1
+  recaptcha.external = 1
+  widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
+  widgetmodule.type = module
+  widgetmodule.async = 1
+  widgetmodule.defer = 1
 
-    widgetmin = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.min.js
-    widgetmin.nomodule = 1
-    widgetmin.async = 1
-    widgetmin.defer = 1
+  widgetmin = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.min.js
+  widgetmin.nomodule = 1
+  widgetmin.async = 1
+  widgetmin.defer = 1
 }

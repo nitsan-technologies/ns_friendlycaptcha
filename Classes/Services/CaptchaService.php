@@ -6,42 +6,27 @@ namespace NITSAN\NsFriendlycaptcha\Services;
 
 use NITSAN\NsFriendlycaptcha\Exception\MissingException;
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Http\ApplicationType;
+use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-
-use GuzzleHttp;
-use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
 class CaptchaService
 {
-    /**
-     * @var array
-     */
-    protected array $configuration = [];
-
-    /**
-     * Guzzle Http Client
-     * @var GuzzleHttp\Client
-     */
-    protected GuzzleHttp\Client $client;
-
-    /**
-     * @throws MissingException
-     */
-    public function __construct()
-    {
+    public function __construct(
+        #[Autowire(expression: 'service("extension-configuration").get("ns_friendlycaptcha")')]
+        private array $extensionConfiguration,
+        protected ConfigurationManagerInterface $configurationManager,
+        protected TypoScriptService $typoScriptService,
+        protected ContentObjectRenderer $contentRenderer,
+        protected RequestFactory $requestFactory
+    ) {
         $this->initialize();
-    }
-
-    public static function getInstance(): CaptchaService
-    {
-        return GeneralUtility::makeInstance(self::class);
     }
 
     /**
@@ -49,219 +34,225 @@ class CaptchaService
      */
     protected function initialize(): void
     {
-        $configuration = GeneralUtility::makeInstance(
-            ExtensionConfiguration::class
-        )->get('ns_friendlycaptcha');
+        if (!is_array($this->extensionConfiguration)) {
+            $this->extensionConfiguration = [];
+        }
 
-        /** @var ConfigurationManagerInterface $configurationManager */
-        $configurationManager = GeneralUtility::makeInstance(ConfigurationManagerInterface::class);
-        $typoScriptConfiguration = $configurationManager->getConfiguration(
+        $typoScriptConfiguration = $this->configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK,
-            'friendlycaptcha'
+            'ns_friendlycaptcha'
         );
 
-        if (!empty($typoScriptConfiguration) && is_array($typoScriptConfiguration)) {
-            /** @var TypoScriptService $typoScriptService */
-            $typoScriptService = GeneralUtility::makeInstance(TypoScriptService::class);
+        if (!empty($typoScriptConfiguration)) {
             ArrayUtility::mergeRecursiveWithOverrule(
-                $configuration,
-                $typoScriptService->convertPlainArrayToTypoScriptArray($typoScriptConfiguration),
+                $this->extensionConfiguration,
+                $this->typoScriptService->convertPlainArrayToTypoScriptArray($typoScriptConfiguration),
                 true,
                 false
             );
         }
 
-        if (!is_array($configuration) || empty($configuration)) {
+        if (!is_array($this->extensionConfiguration) || empty($this->extensionConfiguration)) {
             throw new MissingException(
-                'Please configure plugin.tx_recaptcha. before rendering the recaptcha',
+                'Please configure plugin.tx_ns_friendlycaptcha. before rendering the captcha',
                 1417680291
             );
         }
-
-        $this->configuration = $configuration;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getConfiguration(): array
     {
-        return $this->configuration;
-    }
-
-    protected function getContentObjectRenderer(): ContentObjectRenderer
-    {
-        /** @var ContentObjectRenderer $contentRenderer */
-        return GeneralUtility::makeInstance(ContentObjectRenderer::class);
+        return $this->extensionConfiguration;
     }
 
     /**
-     * Get development mode for captcha rendering even if TYPO3_CONTENT is not development
-     * Based on this the captcha does not get rendered or validated
+     * Maps extension setting "autocheck" to Friendly Captcha data-start values: auto, focus, none.
      */
+    public function getStartMode(): string
+    {
+        $autocheck = $this->extensionConfiguration['autocheck'] ?? 'Auto check';
+
+        if (is_int($autocheck) || (is_string($autocheck) && ctype_digit($autocheck))) {
+            return match ((int)$autocheck) {
+                1 => 'focus',
+                2 => 'none',
+                default => 'auto',
+            };
+        }
+
+        $normalized = strtolower(trim((string)$autocheck));
+
+        return match ($normalized) {
+            'check on focus', 'focus', 'check_on_focus', 'checkonfocus' => 'focus',
+            'manual', 'none' => 'none',
+            'auto check', 'auto', 'auto_check', 'autocheck' => 'auto',
+            default => 'auto',
+        };
+    }
+
+    public function getPuzzleEndpoint(): string
+    {
+        if ($this->isEuEndpointEnabled()) {
+            return 'https://eu-api.friendlycaptcha.eu/api/v1/puzzle';
+        }
+
+        return 'https://api.friendlycaptcha.com/api/v1/puzzle';
+    }
+
+    protected function isEuEndpointEnabled(): bool
+    {
+        $eu = $this->extensionConfiguration['eu'] ?? false;
+
+        return $eu === true || $eu === 1 || $eu === '1';
+    }
+
     protected function isInRobotMode(): bool
     {
-        $this->configuration['robotMode'] = $this->configuration['robotMode'] ?? false;
-        return (bool) $this->configuration['robotMode'];
+        return (bool)($this->extensionConfiguration['robotMode'] ?? false);
     }
 
-    /**
-     * Get development mode by TYPO3_CONTEXT
-     * Based on this the captcha does not get rendered or validated
-     */
     protected function isDevelopmentMode(): bool
     {
-        return (bool) false;
+        return Environment::getContext()->isDevelopment();
     }
 
-    /**
-     * Get enforcing captcha rendering even if development mode is true
-     */
     protected function isEnforceCaptcha(): bool
     {
-        return (bool) $this->configuration['enforceCaptcha'];
+        return (bool)($this->extensionConfiguration['enforceCaptcha'] ?? false);
     }
 
     public function getShowCaptcha(): bool
     {
         return !$this->isInRobotMode()
             && (
-                ApplicationType::fromRequest(
-                    $GLOBALS['TYPO3_REQUEST']
-                )->isBackend() || !$this->isDevelopmentMode() || $this->isEnforceCaptcha()
+                ApplicationType::fromRequest($this->getRequest())->isBackend()
+                || !$this->isDevelopmentMode()
+                || $this->isEnforceCaptcha()
             );
     }
 
-    /**
-     * Build reCAPTCHA Frontend HTML-Code
-     *
-     * @return string reCAPTCHA HTML-Code
-     */
     public function getReCaptcha(): string
     {
         if ($this->getShowCaptcha()) {
-            $captcha = $this->getContentObjectRenderer()->stdWrap(
-                $this->configuration['public_key'],
-                $this->configuration['public_key.']
+            $captcha = $this->contentRenderer->stdWrap(
+                $this->extensionConfiguration['public_key'] ?? '',
+                $this->extensionConfiguration['public_key.'] ?? []
             );
         } else {
             $captcha = '<div class="recaptcha-development-mode">
                 Development mode active. Do not expect the captcha to appear
-                </div>';
+            </div>';
         }
 
-        return $captcha;
+        return $captcha ?? '';
     }
 
     /**
-     * Validate reCAPTCHA challenge/response
-     *
-     * @return array Array with verified- (boolean) and error-code (string)
-     * @throws ContentRenderingException
+     * @return array{verified: bool, error: string}
      */
-    public function validateReCaptcha(): array
+    public function validateReCaptcha(string $value = ''): array
     {
         if (!$this->getShowCaptcha()) {
             return [
                 'verified' => true,
-                'error' => ''
+                'error' => '',
             ];
         }
-        $content = GeneralUtility::makeInstance(ContentObjectRenderer::class);
-        $contentData = $content->getRequest()->getParsedBody();
-        $captchaSolution = trim($contentData['frc-captcha-solution'] ?? '');
+
+        $captchaSolution = trim(
+            $value !== '' ? $value : (string)($this->getRequest()->getParsedBody()['frc-captcha-solution'] ?? '')
+        );
+
+        if ($captchaSolution === '.UNSTARTED' || $captchaSolution === '.UNFINISHED' || $captchaSolution === '.FETCHING') {
+            $captchaSolution = '';
+        }
 
         $request = [
-            'site_key' => $this->configuration['public_key'] ?? '',
-            'secreat_key' =>  $this->configuration['secret_key'] ?? '',
+            'site_key' => $this->extensionConfiguration['public_key'] ?? '',
+            'secret_key' => $this->extensionConfiguration['secret_key'] ?? '',
             'response' => $captchaSolution,
             'remoteip' => GeneralUtility::getIndpEnv('REMOTE_ADDR'),
-            'eu' => $this->configuration['eu'] ?? '',
-            'enablepuzzle' => $this->configuration['enablepuzzle'] ?? ''
+            'eu' => $this->extensionConfiguration['eu'] ?? '',
+            'enablepuzzle' => $this->extensionConfiguration['enablepuzzle'] ?? '',
         ];
-        if($captchaSolution == '.UNSTARTED' || $captchaSolution == '.UNFINISHED' || $captchaSolution == '.FETCHING') {
-            $request['response'] = '';
-        }
-        $result = ['verified' => false, 'error' => ''];
-        if (empty($request['response'])) {
+
+        $result = [
+            'verified' => false,
+            'error' => '',
+        ];
+
+        if ($request['response'] === '') {
             $result['error'] = 'missing-input-response';
         }
 
-        // Server Side Velidation
         $response = $this->queryVerificationServer($request);
-        if($response['success']) {
+        if (!empty($response['success'])) {
             $result['verified'] = true;
-        } else {
-            if(isset($response['error-codes'])) {
-                $result['error'] = $response['error-codes'];
-            }
-            if(isset($response['errors'])) {
-                $result['error'] = 'missing-input-response';
-            }
+        } elseif (isset($response['error-codes'])) {
+            $errorCodes = $response['error-codes'];
+            $result['error'] = (string)(is_array($errorCodes) ? reset($errorCodes) : $errorCodes);
+        } elseif (isset($response['errors'])) {
+            $result['error'] = 'missing-input-response';
+        } elseif ($response === []) {
+            $result['error'] = 'validation-server-not-responding';
         }
+
         return $result;
     }
 
     /**
-     * Query reCAPTCHA server for captcha-verification
-     *
-     * @param array $data
-     *
-     * @return array Array with verified- (boolean) and error-code (string)
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
     protected function queryVerificationServer(array $data): array
     {
-        $verifyServerInfo = 'https://api.friendlycaptcha.com/api/v1/siteverify';
-        if($data['eu']) {
-            $verifyServerInfo = 'https://eu-api.friendlycaptcha.eu/api/v1/siteverify';
+        $verifyServer = 'https://api.friendlycaptcha.com/api/v1/siteverify';
+        if (!empty($data['eu'])) {
+            $verifyServer = 'https://eu-api.friendlycaptcha.eu/api/v1/siteverify';
         }
 
-        if(empty($data['secreat_key'])) {
+        if (empty($data['secret_key'])) {
             return [
                 'success' => false,
-                'error-codes' => 'Invalid Secret Key'
+                'error-codes' => 'invalid-input-secret',
             ];
         }
 
-        $params = [
+        $body = json_encode([
             'solution' => $data['response'],
-            'secret' => $data['secreat_key'],
+            'secret' => $data['secret_key'],
             'sitekey' => $data['site_key'],
-        ];
+        ]);
 
-        $body = json_encode($params);
-        $options = [
-            'http_errors' => true,
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ],
-            'body' => $body,
-        ];
         try {
-            $response = $this->getClient()->post($verifyServerInfo, $options)->getBody()->getContents();
-            return json_decode($response, true);
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
-            if(strpos($e->getMessage(), "secret_invalid")) {
-                return [
-                    'success' => false,
-                    'error-codes' => 'Invalid Secret Key',
-                    'message' => $e
-                ];
-            } else {
-                return [
-                    'success' => false,
-                    'error-codes' => 'validation-server-not-responding',
-                    'message' => $e
-                ];
-            }
+            $response = $this->requestFactory->request(
+                $verifyServer,
+                'POST',
+                [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => $body,
+                ]
+            );
+        } catch (\Throwable) {
+            return [
+                'success' => false,
+                'error-codes' => 'validation-server-not-responding',
+            ];
         }
+
+        $responseBody = (string)$response->getBody();
+
+        return $responseBody !== '' ? (json_decode($responseBody, true) ?? []) : [];
     }
 
-    /**
-     * Gets to guzzle client model
-     * @return GuzzleHttp\Client
-     */
-    public function getClient(): GuzzleHttp\Client
+    protected function getRequest(): ServerRequestInterface
     {
-        $this->client = new \GuzzleHttp\Client([]);
-        return $this->client;
+        return $GLOBALS['TYPO3_REQUEST'];
     }
 }
