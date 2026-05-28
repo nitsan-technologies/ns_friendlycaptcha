@@ -54,7 +54,7 @@ class RecaptchaValidator extends AbstractValidator
             $status = $captcha->validateReCaptcha();
 
             if (!$status || $status['error'] !== '') {
-                $errorText = $this->translateErrorMessage('error_recaptcha_' . $status['error'], 'recaptcha');
+                $errorText = $this->translateErrorMessage('error_recaptcha_' . $status['error'], 'ns_friendlycaptcha');
 
                 if (empty($errorText)) {
                     $errorText = htmlspecialchars($status['error']);
