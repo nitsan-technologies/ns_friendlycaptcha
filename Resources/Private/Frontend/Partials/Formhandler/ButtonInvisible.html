@@ -1,0 +1,27 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+	  xmlns:r="http://typo3.org/ns/NITSAN/NsFriendlycaptcha/ViewHelpers"
+	  data-namespace-typo3-fluid="true">
+
+	<r:form.recaptcha>
+		<f:if condition="{showCaptcha}">
+			<f:then>
+				<button
+					class="btn btn-primary {configuration.captchaCssClass}"
+					data="{
+						sitekey: '{configuration.public_key}',
+						callback: configuration.invisibleCallback
+					}"
+				>###LLL:submit###</button>
+			</f:then>
+			<f:else>
+				<button
+					class="btn btn-primary"
+				>###LLL:submit###</button>
+				<div class="recaptcha-development-mode">
+					Development mode active. Do not expect the captcha to appear
+				</div>
+			</f:else>
+		</f:if>
+	</r:form.recaptcha>
+
+</html>

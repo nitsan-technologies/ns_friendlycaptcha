@@ -16,3 +16,4 @@ TYPO3:
             dynamicJavaScriptModules:
               additionalViewModelModules:
                 1730208326: '@nitsan/ns-friendlycaptcha/backend/form-editor/view-model.js'
+  

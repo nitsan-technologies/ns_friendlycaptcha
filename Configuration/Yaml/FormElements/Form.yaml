@@ -1,15 +1,12 @@
 # Adding use invisible recaptcha checkbox to form settings
-prototypes:
-  standard:
-    formElementsDefinition:
-      Form:
-        formEditor:
-          editors:
-            400:
-              identifier: useInvisibleRecaptcha
-              templateName: Inspector-CheckboxEditor
-              label: formEditor.elements.Form.editor.useInvisibleRecaptcha.label
-              propertyPath: renderingOptions.useInvisibleRecaptcha
-        renderingOptions:
-          partialRootPaths:
-            1974: EXT:ns_friendlycaptcha/Resources/Private/Partials/
+TYPO3:
+  CMS:
+    Form:
+      prototypes:
+        standard:
+          formElementsDefinition:
+            Form:
+              renderingOptions:
+                partialRootPaths:
+                  1974: EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
+              

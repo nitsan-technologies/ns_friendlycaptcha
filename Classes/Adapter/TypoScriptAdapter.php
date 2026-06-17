@@ -1,29 +1,42 @@
 <?php
 
-declare(strict_types=1);
-
 namespace NITSAN\NsFriendlycaptcha\Adapter;
 
 use NITSAN\NsFriendlycaptcha\Services\CaptchaService;
-use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
-#[Autoconfigure(public: true)]
 class TypoScriptAdapter
 {
-    public function __construct(protected CaptchaService $captchaService)
+    protected CaptchaService $captchaService;
+
+    public function __construct(CaptchaService $captchaService)
     {
+        $this->captchaService = $captchaService;
     }
 
+    /**
+     * @throws ContentRenderingException
+     */
     public function render(): string
     {
-        $output = $this->captchaService->getReCaptcha();
+        $output = LocalizationUtility::translate(
+            'error_captcha.notinstalled',
+            'Recaptcha'
+        );
 
-        $status = $this->captchaService->validateReCaptcha();
-        if ($status['error'] !== '') {
-            $output .= '<span class="error">'
-                . LocalizationUtility::translate('error_recaptcha_' . $status['error'], 'ns_friendlycaptcha')
-                . '</span>';
+        if (!empty($this->captchaService)) {
+            $output = $this->captchaService->getReCaptcha();
+            $status = $this->captchaService->validateReCaptcha();
+
+            if (!$status || $status['error'] !== '') {
+                $output .= '<span class="error">' .
+                    LocalizationUtility::translate(
+                        'error_recaptcha_' . $status['error'],
+                        'Recaptcha'
+                    ) .
+                    '</span>';
+            }
         }
 
         return $output;
