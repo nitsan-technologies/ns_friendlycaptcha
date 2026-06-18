@@ -8,5 +8,5 @@ TYPO3:
             Form:
               renderingOptions:
                 partialRootPaths:
-                  1974: EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
+                  1975: EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/
               

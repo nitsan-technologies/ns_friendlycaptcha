@@ -22,7 +22,7 @@ plugin {
 module.tx_form {
     settings {
         yamlConfigurations {
-            1974 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
+            1975 = EXT:ns_friendlycaptcha/Configuration/Yaml/FormSetup.yaml
         }
     }
 }

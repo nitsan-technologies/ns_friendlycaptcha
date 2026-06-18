@@ -25,7 +25,7 @@ export function bootstrap(formEditorApp) {
      * @return {void}
      */
     (topic, args) => {
-      if (args[0].get('type') === 'Recaptcha') {
+      if (args[0].get('type') === 'Nscaptcha') {
         formEditorApp
           .getViewModel()
           .getStage()

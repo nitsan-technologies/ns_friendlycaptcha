@@ -22,18 +22,18 @@ class TypoScriptAdapter
     {
         $output = LocalizationUtility::translate(
             'error_captcha.notinstalled',
-            'Recaptcha'
+            'NsFriendlycaptcha'
         );
 
         if (!empty($this->captchaService)) {
-            $output = $this->captchaService->getReCaptcha();
-            $status = $this->captchaService->validateReCaptcha();
+            $output = $this->captchaService->getNsCaptcha();
+            $status = $this->captchaService->validateNsCaptcha();
 
             if (!$status || $status['error'] !== '') {
                 $output .= '<span class="error">' .
                     LocalizationUtility::translate(
                         'error_recaptcha_' . $status['error'],
-                        'Recaptcha'
+                        'NsFriendlycaptcha'
                     ) .
                     '</span>';
             }

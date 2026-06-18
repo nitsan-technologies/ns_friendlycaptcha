@@ -5,7 +5,7 @@
 <formvh:renderRenderable renderable="{element}">
 	<f:if condition="{element.parentRenderable.parentRenderable.renderingOptions.useInvisibleRecaptcha}">
 		<f:then>
-			<r:form.recaptcha>
+			<r:form.nsCaptcha>
 				<f:if condition="{showCaptcha}">
 					<f:then>
 						<f:form.hidden
@@ -16,12 +16,12 @@
 						/>
 					</f:then>
 				</f:if>
-			</r:form.recaptcha>
+			</r:form.nsCaptcha>
 		</f:then>
 		<f:else>
 			<f:render partial="Field/Field" arguments="{element: element}" contentAs="elementContent">
 				<f:format.raw>
-					<r:form.recaptcha>
+					<r:form.nsCaptcha>
 						<f:if condition="{showCaptcha}">
 							<f:then>
 								<f:form.hidden
@@ -58,7 +58,7 @@
 								</div>
 							</f:else>
 						</f:if>
-					</r:form.recaptcha>
+					</r:form.nsCaptcha>
 				</f:format.raw>
 			</f:render>
 		</f:else>

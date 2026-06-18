@@ -30,7 +30,7 @@
 					<span class="next submit">
 						<f:if condition="{form.formDefinition.renderingOptions.useInvisibleRecaptcha}">
 							<f:then>
-								<r:form.recaptcha>
+								<r:form.nsCaptcha>
 									<f:if condition="{showCaptcha}">
 										<f:then>
 											<button
@@ -54,7 +54,7 @@
 											</div>
 										</f:else>
 									</f:if>
-								</r:form.recaptcha>
+								</r:form.nsCaptcha>
 							</f:then>
 							<f:else>
 								<button

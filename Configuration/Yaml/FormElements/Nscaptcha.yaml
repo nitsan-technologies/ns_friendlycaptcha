@@ -4,7 +4,7 @@ TYPO3:
       prototypes:
         standard:
           formElementsDefinition:
-            Recaptcha:
+            Nscaptcha:
               formEditor:
                 editors:
                   100:
@@ -18,11 +18,11 @@ TYPO3:
                   900:
                     identifier: validators
                     templateName: Inspector-ValidatorsEditor
-                    label: formEditor.elements.FormElement.editor.recaptchaValidator.label
+                    label: formEditor.elements.FormElement.editor.nscaptchaValidator.label
                     selectOptions:
                       180:
-                        value: Recaptcha
-                        label: formEditor.elements.RecaptchaMixin.validators.Recaptcha.editor.header.label'
+                        value: Nscaptcha
+                        label: formEditor.elements.NscaptchaMixin.validators.Nscaptcha.editor.header.label'
                   9999:
                     identifier: removeButton
                     templateName: Inspector-RemoveElementEditor
@@ -30,13 +30,13 @@ TYPO3:
                 predefinedDefaults:
                   validators:
                     10:
-                      identifier: Recaptcha
+                      identifier: Nscaptcha
                   renderingOptions:
                     submitButtonLabel: true
-                label: formEditor.elements.Recaptcha.label
+                label: formEditor.elements.Nscaptcha.label
                 group: custom
                 groupSorting: 700
                 iconIdentifier: t3-form-icon-recaptcha
-              implementationClassName: NITSAN\NsFriendlycaptcha\Domain\Model\FormElements\RecaptchaElement
+              implementationClassName: NITSAN\NsFriendlycaptcha\Domain\Model\FormElements\NsCaptchaElement
               properties:
                 containerClassAttribute: recaptcha

@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace NITSAN\NsFriendlycaptcha\Services;
 
 use NITSAN\NsFriendlycaptcha\Exception\MissingException;
-use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 use GuzzleHttp;
@@ -73,7 +71,7 @@ class CaptchaService
 
         if (!is_array($configuration) || empty($configuration)) {
             throw new MissingException(
-                'Please configure plugin.tx_recaptcha. before rendering the recaptcha',
+                'Please configure plugin.tx_nscaptcha. before rendering the recaptcha',
                 1417680291
             );
         }
@@ -129,7 +127,7 @@ class CaptchaService
      *
      * @return string reCAPTCHA HTML-Code
      */
-    public function getReCaptcha(): string
+    public function getNsCaptcha(): string
     {
         if ($this->getShowCaptcha()) {
             $captcha = $this->getContentObjectRenderer()->stdWrap(
@@ -151,7 +149,7 @@ class CaptchaService
      * @return array Array with verified- (boolean) and error-code (string)
      * @throws ContentRenderingException
      */
-    public function validateReCaptcha(): array
+    public function validateNsCaptcha(): array
     {
         if (!$this->getShowCaptcha()) {
             return [

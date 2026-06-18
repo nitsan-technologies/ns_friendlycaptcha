@@ -11,7 +11,7 @@ use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
-class RecaptchaValidator extends AbstractValidator
+class NsCaptchaValidator extends AbstractValidator
 {
     protected $acceptsEmptyValues = false;
 
@@ -51,7 +51,7 @@ class RecaptchaValidator extends AbstractValidator
         $captcha = GeneralUtility::getContainer()->get(CaptchaService::class);
 
         if ($captcha !== null) {
-            $status = $captcha->validateReCaptcha();
+            $status = $captcha->validateNsCaptcha();
 
             if (!$status || $status['error'] !== '') {
                 $errorText = $this->translateErrorMessage('error_recaptcha_' . $status['error'], 'ns_friendlycaptcha');

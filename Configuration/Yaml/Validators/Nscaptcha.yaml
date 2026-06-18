@@ -1,0 +1,11 @@
+TYPO3:
+  CMS:
+    Form:
+      prototypes:
+        standard:
+          validatorsDefinition:
+            Nscaptcha:
+              implementationClassName: NITSAN\NsFriendlycaptcha\Validation\NsCaptchaValidator
+              formEditor:
+                iconIdentifier: form-validator
+                label: formEditor.elements.NscaptchaMixin.editor.validators.Nscaptcha.label

@@ -1,8 +1,8 @@
 imports:
-  - { resource: "./Validators/Recaptcha.yaml" }
+  - { resource: "./Validators/Nscaptcha.yaml" }
 
   - { resource: "./FormElements/Form.yaml" }
-  - { resource: "./FormElements/Recaptcha.yaml" }
+  - { resource: "./FormElements/Nscaptcha.yaml" }
 
   - { resource: "./Finishers/EmailToReceiver.yaml" }
   - { resource: "./Finishers/EmailToSender.yaml" }
