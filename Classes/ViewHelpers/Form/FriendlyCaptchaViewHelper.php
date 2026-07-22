@@ -10,7 +10,7 @@ use TYPO3\CMS\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
-class RecaptchaViewHelper extends AbstractFormFieldViewHelper
+class FriendlyCaptchaViewHelper extends AbstractFormFieldViewHelper
 {
     protected CaptchaService $captchaService;
 

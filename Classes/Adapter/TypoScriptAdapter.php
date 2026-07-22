@@ -22,20 +22,26 @@ class TypoScriptAdapter
     {
         $output = LocalizationUtility::translate(
             'error_captcha.notinstalled',
-            'Recaptcha'
+            'ns_friendlycaptcha'
         );
 
         if (!empty($this->captchaService)) {
-            $output = $this->captchaService->getReCaptcha();
-            $status = $this->captchaService->validateReCaptcha();
+            $output = $this->captchaService->getFriendlyCaptcha();
+            $status = $this->captchaService->validateFriendlyCaptcha();
 
             if (!$status || $status['error'] !== '') {
-                $output .= '<span class="error">' .
-                    LocalizationUtility::translate(
+                $errorText = LocalizationUtility::translate(
+                    'error_friendlycaptcha_' . $status['error'],
+                    'ns_friendlycaptcha'
+                );
+                // BC: fall back to legacy language keys
+                if (empty($errorText)) {
+                    $errorText = LocalizationUtility::translate(
                         'error_recaptcha_' . $status['error'],
-                        'Recaptcha'
-                    ) .
-                    '</span>';
+                        'ns_friendlycaptcha'
+                    );
+                }
+                $output .= '<span class="error">' . $errorText . '</span>';
             }
         }
 

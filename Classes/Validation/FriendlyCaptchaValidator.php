@@ -8,10 +8,9 @@ use NITSAN\NsFriendlycaptcha\Services\CaptchaService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Error\Result;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
-class RecaptchaValidator extends AbstractValidator
+class FriendlyCaptchaValidator extends AbstractValidator
 {
     protected $acceptsEmptyValues = false;
 
@@ -26,12 +25,6 @@ class RecaptchaValidator extends AbstractValidator
      */
     public function validate(mixed $value = null): Result
     {
-        $content = GeneralUtility::makeInstance(ContentObjectRenderer::class);
-        $contentData = $content->getRequest()->getParsedBody();
-        $value = '';
-        if(!empty($contentData['g-recaptcha-response'])) {
-            $value = trim($contentData['g-recaptcha-response']);
-        }
         $this->result = new Result();
         if ($this->acceptsEmptyValues === false || $this->isEmpty($value) === false) {
             $this->isValid($value);
@@ -51,13 +44,22 @@ class RecaptchaValidator extends AbstractValidator
         $captcha = GeneralUtility::getContainer()->get(CaptchaService::class);
 
         if ($captcha !== null) {
-            $status = $captcha->validateReCaptcha();
+            $status = $captcha->validateFriendlyCaptcha();
 
             if (!$status || $status['error'] !== '') {
-                $errorText = $this->translateErrorMessage('error_recaptcha_' . $status['error'], 'ns_friendlycaptcha');
+                $errorKey = 'error_friendlycaptcha_' . $status['error'];
+                $errorText = $this->translateErrorMessage($errorKey, 'ns_friendlycaptcha');
+
+                // BC: fall back to legacy language keys from EXT:recaptcha naming
+                if (empty($errorText)) {
+                    $errorText = $this->translateErrorMessage(
+                        'error_recaptcha_' . $status['error'],
+                        'ns_friendlycaptcha'
+                    );
+                }
 
                 if (empty($errorText)) {
-                    $errorText = htmlspecialchars($status['error']);
+                    $errorText = htmlspecialchars((string)$status['error']);
                 }
 
                 $this->addError($errorText, 1519982125);
