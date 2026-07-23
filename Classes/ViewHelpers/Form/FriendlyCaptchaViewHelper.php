@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace NITSAN\NsFriendlycaptcha\ViewHelpers\Form;
 
 use NITSAN\NsFriendlycaptcha\Services\CaptchaService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
 class FriendlyCaptchaViewHelper extends AbstractFormFieldViewHelper
 {
@@ -20,18 +17,14 @@ class FriendlyCaptchaViewHelper extends AbstractFormFieldViewHelper
         parent::__construct();
     }
 
-    /**
-     * @throws ContentRenderingException
-     */
     public function render(): string
     {
         $name = $this->getName();
         $this->registerFieldNameForFormTokenGeneration($name);
         $request = $this->getRequest();
         if ($request) {
-            $contents = GeneralUtility::makeInstance(ContentObjectRenderer::class);
-            $currentLang = $contents->getRequest()->getAttributes();
-            $lang = $currentLang['language']->getLocale()->getLanguageCode() ? $currentLang['language']->getLocale()->getLanguageCode() : 'en';
+            $language = $request->getAttribute('language');
+            $lang = $language?->getLocale()->getLanguageCode() ?: 'en';
             $container = $this->templateVariableContainer;
             $container->add('configuration', $this->captchaService->getConfiguration());
             $container->add('showCaptcha', $this->captchaService->getShowCaptcha());
