@@ -19,6 +19,10 @@
 				<source>The captcha response parameter is invalid or malformed.</source>
 				<target>Il parametro di risposta captcha non è valido o malcomposto.</target>
 			</trans-unit>
+			<trans-unit id="development_mode_active" xml:space="preserve">
+				<source>Development mode active. Do not expect the captcha to appear</source>
+				<target>Modalità sviluppo attiva. Non aspettarti che appaia il captcha.</target>
+			</trans-unit>
 
 			<!-- BC: legacy keys -->
 			<trans-unit id="error_recaptcha_missing-input-secret" xml:space="preserve">

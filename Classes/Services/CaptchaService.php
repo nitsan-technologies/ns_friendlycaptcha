@@ -11,6 +11,7 @@ use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -142,9 +143,10 @@ class CaptchaService
                 $this->configuration['public_key.']
             );
         } else {
-            $captcha = '<div class="friendlycaptcha-development-mode">
-                Development mode active. Do not expect the captcha to appear
-                </div>';
+            $label = LocalizationUtility::translate(
+                'LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/locallang.xlf:development_mode_active'
+            ) ?? 'Development mode active. Do not expect the captcha to appear';
+            $captcha = '<div class="friendlycaptcha-development-mode">' . htmlspecialchars($label) . '</div>';
         }
 
         return $captcha;

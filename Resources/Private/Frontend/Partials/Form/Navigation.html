@@ -50,7 +50,7 @@
 													onclick="document.forms['{form.formDefinition.identifier}'].querySelector('#currentPage').value='{form.pages -> f:count()}'"
 											>{formvh:translateElementProperty(element: form, renderingOptionProperty: 'submitButtonLabel')}</button>
 											<div class="friendlycaptcha-development-mode">
-												Development mode active. Do not expect the captcha to appear
+												<f:translate key="LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/locallang.xlf:development_mode_active" />
 											</div>
 										</f:else>
 									</f:if>

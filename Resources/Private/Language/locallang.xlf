@@ -21,6 +21,9 @@
 			<trans-unit id="error_friendlycaptcha_invalid-keys" xml:space="preserve">
 				<source>The private key is invalid or missing</source>
 			</trans-unit>
+			<trans-unit id="development_mode_active" xml:space="preserve">
+				<source>Development mode active. Do not expect the captcha to appear</source>
+			</trans-unit>
 
 			<!-- BC: legacy keys from EXT:recaptcha naming -->
 			<trans-unit id="error_recaptcha_missing-input-secret" xml:space="preserve">
