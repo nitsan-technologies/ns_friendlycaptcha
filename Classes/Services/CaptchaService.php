@@ -11,6 +11,7 @@ use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -73,7 +74,7 @@ class CaptchaService
 
         if (!is_array($configuration) || empty($configuration)) {
             throw new MissingException(
-                'Please configure plugin.tx_recaptcha. before rendering the recaptcha',
+                'Please configure EXT:ns_friendlycaptcha before rendering the Friendly Captcha widget',
                 1417680291
             );
         }
@@ -130,11 +131,11 @@ class CaptchaService
     }
 
     /**
-     * Build reCAPTCHA Frontend HTML-Code
+     * Build Friendly Captcha frontend HTML code
      *
-     * @return string reCAPTCHA HTML-Code
+     * @return string Friendly Captcha HTML code
      */
-    public function getReCaptcha(): string
+    public function getFriendlyCaptcha(): string
     {
         if ($this->getShowCaptcha()) {
             $captcha = $this->getContentObjectRenderer()->stdWrap(
@@ -142,21 +143,30 @@ class CaptchaService
                 $this->configuration['public_key.']
             );
         } else {
-            $captcha = '<div class="recaptcha-development-mode">
-                Development mode active. Do not expect the captcha to appear
-                </div>';
+            $label = LocalizationUtility::translate(
+                'LLL:EXT:ns_friendlycaptcha/Resources/Private/Language/locallang.xlf:development_mode_active'
+            ) ?? 'Development mode active. Do not expect the captcha to appear';
+            $captcha = '<div class="friendlycaptcha-development-mode">' . htmlspecialchars($label) . '</div>';
         }
 
         return $captcha;
     }
 
     /**
-     * Validate reCAPTCHA challenge/response
+     * @deprecated Use getFriendlyCaptcha() instead.
+     */
+    public function getReCaptcha(): string
+    {
+        return $this->getFriendlyCaptcha();
+    }
+
+    /**
+     * Validate Friendly Captcha challenge/response
      *
      * @return array Array with verified- (boolean) and error-code (string)
      * @throws ContentRenderingException
      */
-    public function validateReCaptcha(): array
+    public function validateFriendlyCaptcha(): array
     {
         if (!$this->getShowCaptcha()) {
             return [
@@ -184,7 +194,7 @@ class CaptchaService
             $result['error'] = 'missing-input-response';
         }
 
-        // Server Side Velidation
+        // Server-side validation
         $response = $this->queryVerificationServer($request);
         if($response['success']) {
             $result['verified'] = true;
@@ -200,7 +210,15 @@ class CaptchaService
     }
 
     /**
-     * Query reCAPTCHA server for captcha-verification
+     * @deprecated Use validateFriendlyCaptcha() instead.
+     */
+    public function validateReCaptcha(): array
+    {
+        return $this->validateFriendlyCaptcha();
+    }
+
+    /**
+     * Query Friendly Captcha server for captcha verification
      *
      * @param array $data
      *

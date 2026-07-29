@@ -10,14 +10,24 @@ TYPO3:
                 partialRootPaths:
                   1974: 'EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/'
 
-            Recaptcha:
-              implementationClassName: NITSAN\NsFriendlycaptcha\Domain\Model\FormElements\RecaptchaElement
+            FriendlyCaptcha:
+              implementationClassName: NITSAN\NsFriendlycaptcha\Domain\Model\FormElements\FriendlyCaptchaElement
               properties:
-                containerClassAttribute: 'recaptcha'
+                containerClassAttribute: 'friendlycaptcha'
+
+            # BC alias for existing form definitions
+            Recaptcha:
+              implementationClassName: NITSAN\NsFriendlycaptcha\Domain\Model\FormElements\FriendlyCaptchaElement
+              properties:
+                containerClassAttribute: 'friendlycaptcha'
 
           validatorsDefinition:
+            FriendlyCaptcha:
+              implementationClassName: NITSAN\NsFriendlycaptcha\Validation\FriendlyCaptchaValidator
+
+            # BC alias for existing form definitions
             Recaptcha:
-              implementationClassName: NITSAN\NsFriendlycaptcha\Validation\RecaptchaValidator
+              implementationClassName: NITSAN\NsFriendlycaptcha\Validation\FriendlyCaptchaValidator
       mixins:
         finishersEmailMixin:
           options:

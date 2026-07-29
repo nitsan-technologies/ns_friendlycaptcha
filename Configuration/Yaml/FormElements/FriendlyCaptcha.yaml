@@ -1,0 +1,81 @@
+TYPO3:
+  CMS:
+    Form:
+      prototypes:
+        standard:
+          formElementsDefinition:
+            FriendlyCaptcha:
+              formEditor:
+                editors:
+                  100:
+                    identifier: header
+                    templateName: Inspector-FormElementHeaderEditor
+                  200:
+                    identifier: label
+                    templateName: Inspector-TextEditor
+                    label: formEditor.elements.FormElement.editor.label.label
+                    propertyPath: label
+                  900:
+                    identifier: validators
+                    templateName: Inspector-ValidatorsEditor
+                    label: formEditor.elements.FormElement.editor.friendlyCaptchaValidator.label
+                    selectOptions:
+                      180:
+                        value: FriendlyCaptcha
+                        label: formEditor.elements.FriendlyCaptchaMixin.validators.FriendlyCaptcha.editor.header.label
+                  9999:
+                    identifier: removeButton
+                    templateName: Inspector-RemoveElementEditor
+
+                predefinedDefaults:
+                  validators:
+                    10:
+                      identifier: FriendlyCaptcha
+                  renderingOptions:
+                    submitButtonLabel: true
+                label: formEditor.elements.FriendlyCaptcha.label
+                group: custom
+                groupSorting: 700
+                iconIdentifier: t3-form-icon-friendlycaptcha
+              implementationClassName: NITSAN\NsFriendlycaptcha\Domain\Model\FormElements\FriendlyCaptchaElement
+              properties:
+                containerClassAttribute: friendlycaptcha
+
+            # BC alias for existing form definitions using type "Recaptcha"
+            Recaptcha:
+              formEditor:
+                editors:
+                  100:
+                    identifier: header
+                    templateName: Inspector-FormElementHeaderEditor
+                  200:
+                    identifier: label
+                    templateName: Inspector-TextEditor
+                    label: formEditor.elements.FormElement.editor.label.label
+                    propertyPath: label
+                  900:
+                    identifier: validators
+                    templateName: Inspector-ValidatorsEditor
+                    label: formEditor.elements.FormElement.editor.friendlyCaptchaValidator.label
+                    selectOptions:
+                      180:
+                        value: Recaptcha
+                        label: formEditor.elements.FriendlyCaptchaMixin.validators.FriendlyCaptcha.editor.header.label
+                      190:
+                        value: FriendlyCaptcha
+                        label: formEditor.elements.FriendlyCaptchaMixin.validators.FriendlyCaptcha.editor.header.label
+                  9999:
+                    identifier: removeButton
+                    templateName: Inspector-RemoveElementEditor
+
+                predefinedDefaults:
+                  validators:
+                    10:
+                      identifier: Recaptcha
+                  renderingOptions:
+                    submitButtonLabel: true
+                label: formEditor.elements.FriendlyCaptcha.label
+                iconIdentifier: t3-form-icon-friendlycaptcha
+              implementationClassName: NITSAN\NsFriendlycaptcha\Domain\Model\FormElements\FriendlyCaptchaElement
+              properties:
+                containerClassAttribute: friendlycaptcha

@@ -1,4 +1,4 @@
-# Adding use invisible recaptcha checkbox to form settings
+# Adding form rendering options for Friendly Captcha
 TYPO3:
   CMS:
     Form:

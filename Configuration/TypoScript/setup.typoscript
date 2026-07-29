@@ -2,6 +2,13 @@
 plugin {
     Tx_Formhandler.settings {
         markers {
+            friendlycaptcha_invisible = FLUIDTEMPLATE
+            friendlycaptcha_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/Invisible.html
+
+            friendlycaptcha_button_invisible = FLUIDTEMPLATE
+            friendlycaptcha_button_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/ButtonInvisible.html
+
+            # BC aliases for existing Formhandler setups
             recaptcha_invisible = FLUIDTEMPLATE
             recaptcha_invisible.file = EXT:ns_friendlycaptcha/Resources/Private/Frontend/Partials/Formhandler/Invisible.html
 
@@ -28,7 +35,6 @@ module.tx_form {
 }
 
 page.includeJSFooterlibs {
-    recaptcha.external = 1
     widgetmodule = EXT:ns_friendlycaptcha/Resources/Public/JavaScript/widget.module.min.js
     widgetmodule.type = module
     widgetmodule.async = 1
