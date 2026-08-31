@@ -5,11 +5,14 @@ use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 defined('TYPO3') || die ('Access denied.');
 
-// BC: keep r:form.recaptcha working without a separate RecaptchaViewHelper.php file
-class_alias(
-    \NITSAN\NsFriendlycaptcha\ViewHelpers\Form\FriendlyCaptchaViewHelper::class,
-    \NITSAN\NsFriendlycaptcha\ViewHelpers\Form\RecaptchaViewHelper::class
-);
+// BC: keep r:form.recaptcha working without a separate RecaptchaViewHelper.php file.
+// Guard against double-include of ext_localconf.php
+if (!class_exists(\NITSAN\NsFriendlycaptcha\ViewHelpers\Form\RecaptchaViewHelper::class, false)) {
+    class_alias(
+        \NITSAN\NsFriendlycaptcha\ViewHelpers\Form\FriendlyCaptchaViewHelper::class,
+        \NITSAN\NsFriendlycaptcha\ViewHelpers\Form\RecaptchaViewHelper::class
+    );
+}
 
 $versionNumber =  VersionNumberUtility::convertVersionStringToArray(VersionNumberUtility::getCurrentTypo3Version());
 
