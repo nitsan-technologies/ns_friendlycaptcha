@@ -13,6 +13,7 @@ $EM_CONF['ns_friendlycaptcha'] = [
     'constraints' => [
         'depends' => [
             'typo3' => '12.0.0-14.9.99',
+            'ns_license' => '14.5.4-14.9.99',
         ],
         'conflicts' => [],
         'suggests' => [],

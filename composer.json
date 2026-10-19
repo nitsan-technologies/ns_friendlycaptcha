@@ -15,11 +15,12 @@
     "issues": "https://github.com/nitsan-technologies/ns_friendlycaptcha/issues"
   },
   "require": {
-    "typo3/cms-core": "^12 || ^13 || ^14"
+    "typo3/cms-core": "^12 || ^13 || ^14",
+    "nitsan/ns-license": "^14.5.4"
   },
   "suggest": {
-		"typo3/cms-form": "*"
-	},
+    "typo3/cms-form": "*"
+  },
   "autoload": {
     "psr-4": {
       "NITSAN\\NsFriendlycaptcha\\": "Classes/"
@@ -34,9 +35,9 @@
   },
   "extra": {
     "typo3/cms": {
-        "cms-package-dir": "{$vendor-dir}/typo3/cms",
-        "web-dir": ".Build/public",
-        "extension-key": "ns_friendlycaptcha"
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": ".Build/public",
+      "extension-key": "ns_friendlycaptcha"
     }
   }
 }
