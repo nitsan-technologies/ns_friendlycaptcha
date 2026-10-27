@@ -7,6 +7,7 @@ namespace NITSAN\NsFriendlycaptcha\Services;
 use NITSAN\NsFriendlycaptcha\Exception\MissingException;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Http\ApplicationType;
+use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -17,7 +18,6 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 
 use GuzzleHttp;
-use TYPO3\CMS\Frontend\ContentObject\Exception\ContentRenderingException;
 
 class CaptchaService
 {
@@ -89,8 +89,28 @@ class CaptchaService
 
     protected function getContentObjectRenderer(): ContentObjectRenderer
     {
-        /** @var ContentObjectRenderer $contentRenderer */
-        return GeneralUtility::makeInstance(ContentObjectRenderer::class);
+        $contentRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+        $request = $this->getServerRequest();
+        if ($request instanceof ServerRequestInterface) {
+            $contentRenderer->setRequest($request);
+        }
+        return $contentRenderer;
+    }
+
+    protected function getServerRequest(): ?ServerRequestInterface
+    {
+        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        return $request instanceof ServerRequestInterface ? $request : null;
+    }
+
+    protected function getRemoteAddress(): string
+    {
+        $normalizedParams = $this->getServerRequest()?->getAttribute('normalizedParams');
+        if ($normalizedParams instanceof NormalizedParams) {
+            return $normalizedParams->getRemoteAddress();
+        }
+
+        return (string)($_SERVER['REMOTE_ADDR'] ?? '');
     }
 
     /**
@@ -117,7 +137,7 @@ class CaptchaService
      */
     protected function isEnforceCaptcha(): bool
     {
-        return (bool) $this->configuration['enforceCaptcha'];
+        return (bool) ($this->configuration['enforceCaptcha'] ?? false);
     }
 
     public function getShowCaptcha(): bool
@@ -139,8 +159,8 @@ class CaptchaService
     {
         if ($this->getShowCaptcha()) {
             $captcha = $this->getContentObjectRenderer()->stdWrap(
-                $this->configuration['public_key'],
-                $this->configuration['public_key.']
+                (string)($this->configuration['public_key'] ?? ''),
+                $this->configuration['public_key.'] ?? []
             );
         } else {
             $label = LocalizationUtility::translate(
@@ -164,7 +184,6 @@ class CaptchaService
      * Validate Friendly Captcha challenge/response
      *
      * @return array Array with verified- (boolean) and error-code (string)
-     * @throws ContentRenderingException
      */
     public function validateFriendlyCaptcha(): array
     {
@@ -174,15 +193,14 @@ class CaptchaService
                 'error' => ''
             ];
         }
-        $content = GeneralUtility::makeInstance(ContentObjectRenderer::class);
-        $contentData = $content->getRequest()->getParsedBody();
-        $captchaSolution = trim($contentData['frc-captcha-solution'] ?? '');
+        $contentData = $this->getServerRequest()?->getParsedBody();
+        $captchaSolution = trim(is_array($contentData) ? ($contentData['frc-captcha-solution'] ?? '') : '');
 
         $request = [
             'site_key' => $this->configuration['public_key'] ?? '',
             'secreat_key' =>  $this->configuration['secret_key'] ?? '',
             'response' => $captchaSolution,
-            'remoteip' => GeneralUtility::getIndpEnv('REMOTE_ADDR'),
+            'remoteip' => $this->getRemoteAddress(),
             'eu' => $this->configuration['eu'] ?? '',
             'enablepuzzle' => $this->configuration['enablepuzzle'] ?? ''
         ];
@@ -196,13 +214,16 @@ class CaptchaService
 
         // Server-side validation
         $response = $this->queryVerificationServer($request);
-        if($response['success']) {
+        if (!empty($response['success'])) {
             $result['verified'] = true;
+            $result['error'] = '';
         } else {
-            if(isset($response['error-codes'])) {
-                $result['error'] = $response['error-codes'];
+            if (isset($response['error-codes'])) {
+                $result['error'] = is_array($response['error-codes'])
+                    ? (string)reset($response['error-codes'])
+                    : (string)$response['error-codes'];
             }
-            if(isset($response['errors'])) {
+            if (isset($response['errors'])) {
                 $result['error'] = 'missing-input-response';
             }
         }
@@ -255,7 +276,11 @@ class CaptchaService
         ];
         try {
             $response = $this->getClient()->post($verifyServerInfo, $options)->getBody()->getContents();
-            return json_decode($response, true);
+            $decoded = json_decode($response, true);
+            return is_array($decoded) ? $decoded : [
+                'success' => false,
+                'error-codes' => 'validation-server-not-responding',
+            ];
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             if(strpos($e->getMessage(), "secret_invalid")) {
                 return [
