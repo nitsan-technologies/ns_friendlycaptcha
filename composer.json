@@ -39,7 +39,7 @@
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
       "web-dir": ".Build/public",
       "extension-key": "ns_friendlycaptcha",
-      "version": "14.0.5",
+      "version": "14.0.6",
       "Package": {
         "providesPackages": {}
       }
