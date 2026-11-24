@@ -26,7 +26,7 @@ class FriendlyCaptchaViewHelper extends AbstractFormFieldViewHelper
             $language = $request->getAttribute('language');
             $lang = $language?->getLocale()->getLanguageCode() ?: 'en';
             $container = $this->templateVariableContainer;
-            $container->add('configuration', $this->captchaService->getConfiguration());
+            $container->add('configuration', $this->captchaService->getPublicConfiguration());
             $container->add('showCaptcha', $this->captchaService->getShowCaptcha());
             $container->add('name', $name);
             $container->add('lang', $lang);

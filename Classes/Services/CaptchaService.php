@@ -87,6 +87,17 @@ class CaptchaService
         return $this->configuration;
     }
 
+    /**
+     * Configuration safe for Fluid / frontend output (no secrets).
+     */
+    public function getPublicConfiguration(): array
+    {
+        $configuration = $this->configuration;
+        unset($configuration['secret_key'], $configuration['secreat_key']);
+
+        return $configuration;
+    }
+
     protected function getContentObjectRenderer(): ContentObjectRenderer
     {
         $contentRenderer = GeneralUtility::makeInstance(ContentObjectRenderer::class);
@@ -226,6 +237,10 @@ class CaptchaService
             if (isset($response['errors'])) {
                 $result['error'] = 'missing-input-response';
             }
+            // Fail closed: never return verified=false with an empty error code
+            if ($result['error'] === '') {
+                $result['error'] = 'invalid-input-response';
+            }
         }
         return $result;
     }
@@ -282,19 +297,17 @@ class CaptchaService
                 'error-codes' => 'validation-server-not-responding',
             ];
         } catch (\GuzzleHttp\Exception\RequestException $e) {
-            if(strpos($e->getMessage(), "secret_invalid")) {
+            if (strpos($e->getMessage(), 'secret_invalid') !== false) {
                 return [
                     'success' => false,
                     'error-codes' => 'Invalid Secret Key',
-                    'message' => $e
-                ];
-            } else {
-                return [
-                    'success' => false,
-                    'error-codes' => 'validation-server-not-responding',
-                    'message' => $e
                 ];
             }
+
+            return [
+                'success' => false,
+                'error-codes' => 'validation-server-not-responding',
+            ];
         }
     }
 
