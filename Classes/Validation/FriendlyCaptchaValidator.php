@@ -46,20 +46,26 @@ class FriendlyCaptchaValidator extends AbstractValidator
         if ($captcha !== null) {
             $status = $captcha->validateFriendlyCaptcha();
 
-            if (!$status || $status['error'] !== '') {
-                $errorKey = 'error_friendlycaptcha_' . $status['error'];
+            // Fail closed on missing/failed verification (do not rely on error alone)
+            if (empty($status['verified'])) {
+                $errorCode = (string)($status['error'] ?? '');
+                if ($errorCode === '') {
+                    $errorCode = 'invalid-input-response';
+                }
+
+                $errorKey = 'error_friendlycaptcha_' . $errorCode;
                 $errorText = $this->translateErrorMessage($errorKey, 'ns_friendlycaptcha');
 
                 // BC: fall back to legacy language keys from EXT:recaptcha naming
                 if (empty($errorText)) {
                     $errorText = $this->translateErrorMessage(
-                        'error_recaptcha_' . $status['error'],
+                        'error_recaptcha_' . $errorCode,
                         'ns_friendlycaptcha'
                     );
                 }
 
                 if (empty($errorText)) {
-                    $errorText = htmlspecialchars((string)$status['error']);
+                    $errorText = htmlspecialchars($errorCode);
                 }
 
                 $this->addError($errorText, 1519982125);
